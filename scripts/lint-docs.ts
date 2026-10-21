@@ -340,6 +340,67 @@ function checkOrphanedDocs(allFiles: string[]): void {
 }
 
 // ============================================================================
+// MAINTAINER GOVERNANCE VALIDATION
+// ============================================================================
+
+const REQUIRED_MAINTAINER_DOCS = [
+  'MAINTAINERS.md',
+  'docs/maintainers/README.md',
+  'docs/maintainers/release-engineering.md',
+  'docs/maintainers/code-review-and-merging.md',
+  'docs/maintainers/security-vulnerability-handling.md',
+  'docs/maintainers/triaging-and-support.md',
+  'docs/maintainers/database-migration-policy.md',
+  'docs/maintainers/onboarding-and-offboarding.md',
+  'docs/maintainers/architecture-governance.md',
+];
+
+const REQUIRED_GOVERNANCE_SECTIONS = [
+  'Core Principles',
+  'Maintainer Roster',
+  'Roles & Responsibilities',
+  'Decision-Making & Consensus Model',
+  'Review & Operational SLAs',
+  'Path to Maintainership',
+  'Maintainer Standards & Invariants',
+  'Inactivity & Emeritus Transition',
+];
+
+function validateMaintainerGovernance(): void {
+  // 1. Check all required maintainer documents exist
+  for (const docRel of REQUIRED_MAINTAINER_DOCS) {
+    const fullPath = path.join(REPO_ROOT, docRel);
+    if (!fs.existsSync(fullPath)) {
+      ISSUES.push({
+        file: docRel,
+        line: 1,
+        rule: 'missing-maintainer-doc',
+        message: `Mandatory maintainer operations document "${docRel}" is missing. Strict maintainer governance requires this document.`,
+        severity: 'error',
+      });
+    }
+  }
+
+  // 2. Validate MAINTAINERS.md sections
+  const maintainersFile = path.join(REPO_ROOT, 'MAINTAINERS.md');
+  if (fs.existsSync(maintainersFile)) {
+    const content = fs.readFileSync(maintainersFile, 'utf-8');
+    for (const section of REQUIRED_GOVERNANCE_SECTIONS) {
+      const sectionRegex = new RegExp(`^#{2,3}\\s+${section}`, 'm');
+      if (!sectionRegex.test(content)) {
+        ISSUES.push({
+          file: 'MAINTAINERS.md',
+          line: 1,
+          rule: 'maintainers-missing-section',
+          message: `MAINTAINERS.md is missing mandatory governance section: "## ${section}".`,
+          severity: 'error',
+        });
+      }
+    }
+  }
+}
+
+// ============================================================================
 // CLI RUNNER & FORMATTED REPORTING
 // ============================================================================
 
@@ -354,6 +415,7 @@ function main(): void {
   }
 
   checkOrphanedDocs(files);
+  validateMaintainerGovernance();
 
   const errors = ISSUES.filter(i => i.severity === 'error');
   const warnings = ISSUES.filter(i => i.severity === 'warning');
@@ -380,8 +442,9 @@ function main(): void {
     process.exit(1);
   }
 
-  console.log('✅ Documentation integrity verified: Zero broken links, zero stale data, all ADRs compliant.\n');
+  console.log('✅ Documentation integrity verified: Zero broken links, zero stale data, all ADRs & maintainer docs compliant.\n');
   process.exit(0);
 }
 
 main();
+

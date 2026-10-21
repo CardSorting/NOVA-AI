@@ -18,6 +18,7 @@
 ---
 
 [![Documentation Gate](https://img.shields.io/badge/docs--gate-passing-brightgreen.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/scripts/lint-docs.ts)
+[![Maintainers](https://img.shields.io/badge/Maintainers-Governance%20%26%20SOPs-purple.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/docs/maintainers)
 [![Architecture Guides](https://img.shields.io/badge/Architecture-7%20Guides-blue.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/docs/architecture)
 [![API Reference](https://img.shields.io/badge/APIs-5%20Endpoints-orange.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/docs/api)
 [![ADRs](https://img.shields.io/badge/ADRs-6%20Accepted-blueviolet.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/docs/adrs)
@@ -43,6 +44,7 @@
 | 📋 **[Operational Runbooks](./runbooks/README.md)** | On-Call Engineers | Standard operating procedures for incident response, cluster autoscaling, and shard rotation. |
 | 🩺 **[Triage Playbooks](./playbooks/README.md)** | Platform Engineers | Diagnostic playbooks for upstream outages, ITL stalls, and burst queue decoupling. |
 | 🔍 **[Blameless Post-Mortems](./post-mortems/README.md)** | Engineering Team | Retrospectives on historical outages that shaped NOVA's defensive resilience features. |
+| 👥 **[Maintainer Operations & Governance](./maintainers/README.md)** | Maintainers, SRE Leads | Maintainer charter, SemVer release engineering, PR review checklists, security response, and zero-downtime DB migrations. |
 | 🛡️ **[Docs Freshness CI Gate](../scripts/lint-docs.ts)** | Contributors, Maintainers | Automated linter verifying link integrity, anchor resolution, and anti-staleness constraints. |
 
 ---
@@ -101,6 +103,17 @@
 ### 8. Blameless Post-Mortems
 - [Post-Mortem: 2026-03-14 Upstream WebSocket Silent Stall Cascade](./post-mortems/postmortem-2026-03-14-upstream-cascade-itl-hang.md)
 - [Post-Mortem: 2026-06-22 Tier-1 Burst Quota Exhaustion](./post-mortems/postmortem-2026-06-22-burst-quota-exhaustion.md)
+
+### 9. Maintainer Operations & Governance
+- [Project Maintainers Charter & Governance](../MAINTAINERS.md)
+- [Maintainer Operations Portal & Index](./maintainers/README.md)
+- [SemVer 2.0.0 Release Engineering & SLSA Provenance](./maintainers/release-engineering.md)
+- [Strict PR Review Quality Gates & Merge Strategy](./maintainers/code-review-and-merging.md)
+- [Security Vulnerability Handling & Coordinated Disclosure](./maintainers/security-vulnerability-handling.md)
+- [Issue Triage State Machine & Reproduction Verification](./maintainers/triaging-and-support.md)
+- [Zero-Downtime Database Migration & DDL Lock Safety](./maintainers/database-migration-policy.md)
+- [Maintainer Onboarding, FIDO2/GPG & Offboarding](./maintainers/onboarding-and-offboarding.md)
+- [Architecture Governance & Anti-Dependency Policy](./maintainers/architecture-governance.md)
 
 ---
 

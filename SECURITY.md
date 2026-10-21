@@ -68,3 +68,12 @@ Public API callers (`/v1/*`) are strictly separated from upstream infrastructure
 
 ### 5. Monotonic Fencing Tokens
 To eliminate split-brain hazards in distributed worker environments, all execution leases carry monotonically increasing 64-bit fencing tokens verified atomically at settlement by the PostgreSQL substrate.
+
+---
+
+## Maintainer Security Response & Incident Playbooks
+
+For detailed protocols governing how maintainers coordinate advisories, reserve CVEs, and backport security patches:
+- 🔒 **[Security Vulnerability Handling Runbook](file:///Users/bozoegg/Downloads/nova/docs/maintainers/security-vulnerability-handling.md)**
+- 👥 **[Security Response Team (SRT) Roster](file:///Users/bozoegg/Downloads/nova/MAINTAINERS.md#security-response-team-srt)**
+

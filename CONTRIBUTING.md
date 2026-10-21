@@ -162,9 +162,21 @@ Before submitting your pull request, please verify:
 - [ ] Documentation and comments are updated where appropriate.
 - [ ] Commit messages follow the [Conventional Commits](#commit-message-conventions) pattern.
 - [ ] No secrets, private API keys, or personal tokens are committed.
+- [ ] `npm run lint:docs` passes with 0 errors and 0 warnings.
+
+---
+
+## Path to Maintainership
+
+Active, high-leverage contributors are regularly invited to become official repository Reviewers and Core Maintainers.
+
+For full details on governance roles, voting procedures, maintainer SLAs, and nomination criteria:
+- 👥 **[NOVA Governance Charter & Maintainer Roster](file:///Users/bozoegg/Downloads/nova/MAINTAINERS.md)**
+- 🛠️ **[Maintainer Operations & Engineering Standards Portal](file:///Users/bozoegg/Downloads/nova/docs/maintainers/README.md)**
 
 ---
 
 ## Reporting Security Issues
 
-Please do **NOT** open public GitHub issues for security vulnerabilities. Instead, refer to our [Security Policy](file:///Users/bozoegg/Downloads/nova/SECURITY.md) for our responsible disclosure procedure.
+Please do **NOT** open public GitHub issues for security vulnerabilities. Instead, refer to our [Security Policy](file:///Users/bozoegg/Downloads/nova/SECURITY.md) and our [Security Vulnerability Handling Runbook](file:///Users/bozoegg/Downloads/nova/docs/maintainers/security-vulnerability-handling.md) for our responsible disclosure procedure.
+

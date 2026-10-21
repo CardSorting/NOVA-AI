@@ -27,6 +27,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/LICENSE)
 [![Zero Supabase Bloat](https://img.shields.io/badge/Supabase%20Bloat-0%25%20Distilled-success.svg?style=flat-square)](#distilled-postgresql-layer)
 [![Wiki & Docs](https://img.shields.io/badge/Wiki%20%26%20Docs-Knowledge%20Base-blueviolet.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/docs/README.md)
+[![Maintainers](https://img.shields.io/badge/maintainers-governance-purple.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/MAINTAINERS.md)
 [![Docs Gate](https://img.shields.io/badge/docs--gate-passing-brightgreen.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/scripts/lint-docs.ts)
 [![Contributing](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/CONTRIBUTING.md)
 [![Code of Conduct](https://img.shields.io/badge/Contributor%20Covenant-2.1-blue.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/CODE_OF_CONDUCT.md)
@@ -43,6 +44,7 @@
 [🐳 Deployment](#production-deployment) •
 [🧪 23 Tests](#testing-and-verification) •
 [📚 Wiki & Docs](file:///Users/bozoegg/Downloads/nova/docs/README.md) •
+[👥 Maintainers](file:///Users/bozoegg/Downloads/nova/MAINTAINERS.md) •
 [🤝 Contributing](file:///Users/bozoegg/Downloads/nova/CONTRIBUTING.md) •
 [🛡️ Security](file:///Users/bozoegg/Downloads/nova/SECURITY.md) •
 [📜 License](file:///Users/bozoegg/Downloads/nova/LICENSE)
@@ -57,12 +59,12 @@
 | Getting Started & Concepts | APIs & Integrations | Core Mechanics & Queues | Ops, Governance & Docs |
 | :--- | :--- | :--- | :--- |
 | • [Why NOVA?](#why-nova) | • [Gateway API Reference](#gateway-apis) | • [Smooth Weighted Round Robin](#1-smooth-weighted-round-robin-swrr) | • [Knowledge Base Wiki](file:///Users/bozoegg/Downloads/nova/docs/README.md) |
-| • [Feature Comparison](#feature-comparison-matrix) | • [Tool Use & Function Calls](#1-post-v1chatcompletions) | • [Continuous Token Buckets](#2-continuous-token-bucket-rate-governor) | • [Architecture Decision Records (ADRs)](file:///Users/bozoegg/Downloads/nova/docs/adrs/README.md) |
-| • [60-Second Quickstart](#quickstart) | • [Image Generation & Sharp](#2-post-v1imagesgenerations) | • [Canary Circuit Breaker](#3-canary-circuit-breaker--outlier-detection) | • [Operational Runbooks](file:///Users/bozoegg/Downloads/nova/docs/runbooks/README.md) |
-| • [Multi-Language Clients](#multi-language-clients) | • [Async Jobs & Streaming](#3-asynchronous-queue-decoupling-http-202) | • [Native BroccoliQueue Engine](#native-broccoliqueue-engine) | • [Triage Playbooks](file:///Users/bozoegg/Downloads/nova/docs/playbooks/README.md) |
-| • [Architecture & Dataflow](#architecture) | • [TypeScript Client SDK](#client-sdks) | • [Distributed Fenced Leases](#5-distributed-fenced-leases) | • [Blameless Post-Mortems](file:///Users/bozoegg/Downloads/nova/docs/post-mortems/README.md) |
-| • [Project Structure](#project-structure) | • [Shard Enrollment Guide](#shard-fleet) | • [7-Layer Timeout Hierarchy](#7-layer-websocket-timeout-hierarchy) | • [Setup & Startup Guides](file:///Users/bozoegg/Downloads/nova/docs/setup/README.md) |
-| • [Testing & 23-Test Suite](#testing-and-verification) | • [Unified CLI Reference](#cli-reference) | • [Bulkheads & Output Budgets](#7-request-bulkheads--output-token-budgeting) | • [Security Policy](file:///Users/bozoegg/Downloads/nova/SECURITY.md) & [License](file:///Users/bozoegg/Downloads/nova/LICENSE) |
+| • [Feature Comparison](#feature-comparison-matrix) | • [Tool Use & Function Calls](#1-post-v1chatcompletions) | • [Continuous Token Buckets](#2-continuous-token-bucket-rate-governor) | • [Maintainers Charter](file:///Users/bozoegg/Downloads/nova/MAINTAINERS.md) |
+| • [60-Second Quickstart](#quickstart) | • [Image Generation & Sharp](#2-post-v1imagesgenerations) | • [Canary Circuit Breaker](#3-canary-circuit-breaker--outlier-detection) | • [Maintainer Operations](file:///Users/bozoegg/Downloads/nova/docs/maintainers/README.md) |
+| • [Multi-Language Clients](#multi-language-clients) | • [Async Jobs & Streaming](#3-asynchronous-queue-decoupling-http-202) | • [Native BroccoliQueue Engine](#native-broccoliqueue-engine) | • [Architecture Decision Records (ADRs)](file:///Users/bozoegg/Downloads/nova/docs/adrs/README.md) |
+| • [Architecture & Dataflow](#architecture) | • [TypeScript Client SDK](#client-sdks) | • [Distributed Fenced Leases](#5-distributed-fenced-leases) | • [Operational Runbooks](file:///Users/bozoegg/Downloads/nova/docs/runbooks/README.md) |
+| • [Project Structure](#project-structure) | • [Shard Enrollment Guide](#shard-fleet) | • [7-Layer Timeout Hierarchy](#7-layer-websocket-timeout-hierarchy) | • [Triage Playbooks](file:///Users/bozoegg/Downloads/nova/docs/playbooks/README.md) |
+| • [Testing & 23-Test Suite](#testing-and-verification) | • [Unified CLI Reference](#cli-reference) | • [Bulkheads & Output Budgets](#7-request-bulkheads--output-token-budgeting) | • [Post-Mortems](file:///Users/bozoegg/Downloads/nova/docs/post-mortems/README.md) & [Security Policy](file:///Users/bozoegg/Downloads/nova/SECURITY.md) |
 
 ---
 
@@ -1359,6 +1361,11 @@ nova/
 ├── docs/                        # Complete Knowledge Base Wiki (ADRs, runbooks, playbooks, post-mortems)
 │   ├── README.md                # Wiki portal & master docs index
 │   ├── setup/                   # Setup and startup guides (local, cluster, DB, vault)
+│   ├── maintainers/             # Maintainer SOPs (releases, review, security, triage, DB migrations)
+│   ├── architecture/            # 7 Technical specs (SWRR, token buckets, MinHeaps, timeouts)
+│   ├── api/                     # 4 API endpoint specifications & streaming wire guides
+│   ├── observability/           # Prometheus metrics catalog & latency tracing telemetry
+│   ├── sdks/                    # Multi-language client integrations (TypeScript, Python, LangChain, cURL)
 │   ├── adrs/                    # 6 Architecture Decision Records (SWRR, token buckets, queues, DB)
 │   ├── runbooks/                # 4 Operational SOPs (incidents, scaling, DB maintenance, shard rotation)
 │   ├── playbooks/               # 3 Fast-path triage playbooks (outages, ITL stalls, burst decoupling)
@@ -1369,6 +1376,7 @@ nova/
 ├── CODE_OF_CONDUCT.md           # Contributor Covenant v2.1 code of conduct
 ├── CONTRIBUTING.md              # Contributor guide, architecture rules & PR checklist
 ├── LICENSE                      # Official MIT open-source license
+├── MAINTAINERS.md               # Maintainer roster, governance charter, voting thresholds & SLAs
 ├── SECURITY.md                  # Security policy, reporting procedures & cryptographic guarantees
 ├── README.md                    # Gateway documentation & operational runbooks
 ├── package.json
@@ -1388,12 +1396,14 @@ nova/
 ---
 
 <a id="contributing"></a>
-## 🤝 Contributing
+## 🤝 Contributing & Maintainership
 
 We welcome community contributions, bug reports, and architectural improvements! Please consult our official guides before submitting pull requests:
 
 - 📖 **[Contributing Guide](file:///Users/bozoegg/Downloads/nova/CONTRIBUTING.md):** Complete development setup, testing practices, strict TypeScript coding guidelines, conventional commit rules, and PR checklist.
 - 📜 **[Code of Conduct](file:///Users/bozoegg/Downloads/nova/CODE_OF_CONDUCT.md):** Contributor Covenant v2.1 standards for an inclusive, harassment-free environment.
+- 👥 **[Maintainers Charter](file:///Users/bozoegg/Downloads/nova/MAINTAINERS.md):** Project governance structure, consensus voting models, maintainer SLAs, and the path to maintainership.
+- 🛠️ **[Maintainer Operations Portal](file:///Users/bozoegg/Downloads/nova/docs/maintainers/README.md):** Authoritative runbooks for SemVer releases, code reviews, coordinated CVE disclosures, and zero-downtime DB migrations.
 
 ### Quick Workflow
 ```bash
