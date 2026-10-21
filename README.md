@@ -24,8 +24,12 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14--17%2B-blueviolet.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/db/schema.sql)
 [![Protocol](https://img.shields.io/badge/OpenAI-Compatible-orange.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/src/relay/relay-server.ts)
 [![Routing Overhead](https://img.shields.io/badge/routing%20overhead-%3C0.4ms-success.svg?style=flat-square)](#benchmarks--performance-overhead)
-[![License](https://img.shields.io/badge/license-MIT-purple.svg?style=flat-square)](#license)
+[![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/LICENSE)
 [![Zero Supabase Bloat](https://img.shields.io/badge/Supabase%20Bloat-0%25%20Distilled-success.svg?style=flat-square)](#distilled-postgresql-layer)
+[![Contributing](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/CONTRIBUTING.md)
+[![Code of Conduct](https://img.shields.io/badge/Contributor%20Covenant-2.1-blue.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/CODE_OF_CONDUCT.md)
+[![Security Policy](https://img.shields.io/badge/security-policy-red.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/SECURITY.md)
+[![Changelog](https://img.shields.io/badge/changelog-v1.1.0-blue.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/CHANGELOG.md)
 
 [⚡ Quickstart](#quickstart) •
 [🏛️ Architecture](#architecture) •
@@ -35,7 +39,10 @@
 [📦 Client SDKs](#client-sdks) •
 [⚙️ Config Matrix](#configuration-matrix) •
 [🐳 Deployment](#production-deployment) •
-[🧪 23 Tests](#testing-and-verification)
+[🧪 23 Tests](#testing-and-verification) •
+[🤝 Contributing](file:///Users/bozoegg/Downloads/nova/CONTRIBUTING.md) •
+[🛡️ Security](file:///Users/bozoegg/Downloads/nova/SECURITY.md) •
+[📜 License](file:///Users/bozoegg/Downloads/nova/LICENSE)
 
 </div>
 
@@ -44,14 +51,15 @@
 <a id="table-of-contents"></a>
 ## ⚡ Quick Navigation
 
-| Getting Started & Concepts | APIs & Integrations | Core Mechanics & Queues | Ops, Database & Safety |
+| Getting Started & Concepts | APIs & Integrations | Core Mechanics & Queues | Ops, Governance & Safety |
 | :--- | :--- | :--- | :--- |
 | • [Why NOVA?](#why-nova) | • [Gateway API Reference](#gateway-apis) | • [Smooth Weighted Round Robin](#1-smooth-weighted-round-robin-swrr) | • [Distilled PostgreSQL Layer](#distilled-postgresql-layer) |
 | • [Feature Comparison](#feature-comparison-matrix) | • [Tool Use & Function Calls](#1-post-v1chatcompletions) | • [Continuous Token Buckets](#2-continuous-token-bucket-rate-governor) | • [Configuration Matrix](#configuration-matrix) |
 | • [60-Second Quickstart](#quickstart) | • [Image Generation & Sharp](#2-post-v1imagesgenerations) | • [Canary Circuit Breaker](#3-canary-circuit-breaker--outlier-detection) | • [Docker & K8s Manifests](#production-deployment) |
 | • [Multi-Language Clients](#multi-language-clients) | • [Async Jobs & Streaming](#3-asynchronous-queue-decoupling-http-202) | • [Native BroccoliQueue Engine](#native-broccoliqueue-engine) | • [Troubleshooting & Errors](#troubleshooting-matrix) |
-| • [Architecture & Dataflow](#architecture) | • [TypeScript Client SDK](#client-sdks) | • [Distributed Fenced Leases](#5-distributed-fenced-leases) | • [Testing & 23-Test Suite](#testing-and-verification) |
-| • [Project Structure](#project-structure) | • [Shard Enrollment Guide](#shard-fleet) | • [7-Layer Timeout Hierarchy](#7-layer-websocket-timeout-hierarchy) | • [Contributing & License](#contributing) |
+| • [Architecture & Dataflow](#architecture) | • [TypeScript Client SDK](#client-sdks) | • [Distributed Fenced Leases](#5-distributed-fenced-leases) | • [Security Policy](file:///Users/bozoegg/Downloads/nova/SECURITY.md) |
+| • [Project Structure](#project-structure) | • [Shard Enrollment Guide](#shard-fleet) | • [7-Layer Timeout Hierarchy](#7-layer-websocket-timeout-hierarchy) | • [Contributing Guide](file:///Users/bozoegg/Downloads/nova/CONTRIBUTING.md) |
+| • [Testing & 23-Test Suite](#testing-and-verification) | • [Unified CLI Reference](#cli-reference) | • [Bulkheads & Output Budgets](#7-request-bulkheads--output-token-budgeting) | • [Code of Conduct](file:///Users/bozoegg/Downloads/nova/CODE_OF_CONDUCT.md) & [License](file:///Users/bozoegg/Downloads/nova/LICENSE) |
 
 ---
 
@@ -1283,6 +1291,12 @@ npm run typecheck
 
 ```
 nova/
+├── .github/
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── bug_report.md        # Structured bug report template
+│   │   ├── feature_request.md   # Architectural feature request template
+│   │   └── config.yml           # Community links & discussions config
+│   └── PULL_REQUEST_TEMPLATE.md # Standardized PR verification checklist
 ├── bin/
 │   ├── nova.ts                  # Unified CLI runner (relay, pool, migrate)
 │   ├── relay.ts                 # Standalone NOVA Relay Gateway CLI
@@ -1339,6 +1353,12 @@ nova/
 │   │   └── table-contracts.ts   # Storage interfaces
 │   └── index.ts                 # Master library entrypoint exporting public APIs
 ├── tests/                       # 23 automated unit and integration tests across 7 suites
+├── CHANGELOG.md                 # Semantic versioning release history & migration logs
+├── CODE_OF_CONDUCT.md           # Contributor Covenant v2.1 code of conduct
+├── CONTRIBUTING.md              # Contributor guide, architecture rules & PR checklist
+├── LICENSE                      # Official MIT open-source license
+├── SECURITY.md                  # Security policy, reporting procedures & cryptographic guarantees
+├── README.md                    # Gateway documentation & operational runbooks
 ├── package.json
 └── tsconfig.json
 ```
@@ -1351,23 +1371,54 @@ nova/
 1. **Zero External Workspace Dependencies:** `nova` does not import any files from external or parent directories (`../`). All required models, security routines, and storage drivers are self-contained.
 2. **Untouched Source Codebase:** The parent GALX codebase remains in its pristine state with zero modifications.
 3. **Public Privacy Firewall:** All public DTOs format outputs through strict allowlists, preventing accidental disclosure of upstream telemetry, shard IDs, or internal failure diagnostics.
-4. **Idempotent Distilled Database:** `db/schema.sql` can be re-run safely multiple times against any PostgreSQL database without data loss.
+4. **Idempotent Distilled Database:** [db/schema.sql](file:///Users/bozoegg/Downloads/nova/db/schema.sql) can be re-run safely multiple times against any PostgreSQL database without data loss.
 
 ---
 
 <a id="contributing"></a>
 ## 🤝 Contributing
 
-Contributions are welcome! Please follow these steps:
-1. Fork the repository and create a feature branch (`git checkout -b feature/amazing-feature`).
-2. Make your changes and ensure all tests pass: `npm test`.
-3. Verify type correctness: `npm run typecheck`.
-4. Commit your changes using conventional commit messages: `git commit -m 'feat: add support for streaming function tool calls'`.
-5. Push to the branch (`git push origin feature/amazing-feature`) and open a Pull Request.
+We welcome community contributions, bug reports, and architectural improvements! Please consult our official guides before submitting pull requests:
+
+- 📖 **[Contributing Guide](file:///Users/bozoegg/Downloads/nova/CONTRIBUTING.md):** Complete development setup, testing practices, strict TypeScript coding guidelines, conventional commit rules, and PR checklist.
+- 📜 **[Code of Conduct](file:///Users/bozoegg/Downloads/nova/CODE_OF_CONDUCT.md):** Contributor Covenant v2.1 standards for an inclusive, harassment-free environment.
+
+### Quick Workflow
+```bash
+# 1. Create a feature branch
+git checkout -b feat/your-improvement
+
+# 2. Verify all 23 unit & integration tests pass in <700ms
+npm test
+
+# 3. Verify 0 TypeScript strict type errors
+npm run typecheck
+
+# 4. Commit using Conventional Commits
+git commit -m 'feat(queue): implement batch lease renewal heartbeats'
+```
+
+---
+
+<a id="security"></a>
+## 🛡️ Security & Vulnerability Reporting
+
+Security and credential isolation are paramount in NOVA. Upstream credentials are protected via hardware-grade **AES-256-GCM envelope encryption**, constant-time authentication, and strict zero-leak egress firewalls.
+
+- For vulnerability disclosures, please review our **[Security Policy](file:///Users/bozoegg/Downloads/nova/SECURITY.md)**.
+- Please report vulnerabilities privately via [GitHub Security Advisories](https://github.com/CardSorting/NOVA-AI/security/advisories) or by emailing [security@cardsorting.org](mailto:security@cardsorting.org). Do not open public issues for security vulnerabilities.
+
+---
+
+<a id="changelog"></a>
+## 📜 Changelog & Release History
+
+NOVA adheres to [Semantic Versioning](https://semver.org/) and follows [Keep a Changelog](https://keepachangelog.com/). Detailed notes on features, fixes, and architectural evolutions are tracked in **[CHANGELOG.md](file:///Users/bozoegg/Downloads/nova/CHANGELOG.md)**.
 
 ---
 
 <a id="license"></a>
 ## 📄 License
 
-Distributed under the MIT License. See [package.json](file:///Users/bozoegg/Downloads/nova/package.json) for details.
+Distributed under the **MIT License**. See **[LICENSE](file:///Users/bozoegg/Downloads/nova/LICENSE)** for full legal text and copyright notices.
+Copyright &copy; 2026 CardSorting and NOVA Contributors.
