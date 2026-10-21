@@ -40,9 +40,10 @@ The following comprehensive playbooks govern daily repository operations:
 | 🗄️ **[Database Migration Policy](./database-migration-policy.md)** | Zero-downtime PostgreSQL schema evolution for `db/schema.sql`, expand-contract pattern, safe locking, and rollback runbooks. | Database Stewards, Core Maintainers |
 | 👥 **[Onboarding & Offboarding Runbook](./onboarding-and-offboarding.md)** | Maintainer career ladder, hardware 2FA enforcement, GPG key registration, permission matrices, and emeritus offboarding. | Steering Committee, Mentors |
 | 🏛️ **[Architecture Governance](./architecture-governance.md)** | Architectural Decision Record (ADR) lifecycle, anti-dependency creep policies, and subsystem boundary enforcement. | Architects, Core Maintainers |
-
+| 📑 **[Request for Comments (RFC) Process](./rfc-process.md)** | Formal RFC process for proposing non-trivial architectural, protocol wire, or scheduling algorithm evolutions. | Contributors, Maintainers |
 
 ---
+
 
 ## Maintainer Weekly On-Call Rotation
 

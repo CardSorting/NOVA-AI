@@ -4,7 +4,11 @@
 
 Because NOVA strictly implements the standard OpenAI wire protocol, developers can connect using any official or third-party client library.
 
+> [!NOTE]
+> **Network Decoupling:** All SDKs and integrations connect to NOVA over standard network wire protocols (HTTP/WebSocket) to an independently running NOVA daemon. Client applications act strictly as external request producers and token consumers, maintaining absolute isolation from NOVA's internal queues and cryptographic vault.
+
 ---
+
 
 <a id="sdk-guides"></a>
 ## 📦 Available Integration Guides

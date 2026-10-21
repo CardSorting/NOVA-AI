@@ -366,6 +366,7 @@ const REQUIRED_MAINTAINER_DOCS = [
   'docs/maintainers/database-migration-policy.md',
   'docs/maintainers/onboarding-and-offboarding.md',
   'docs/maintainers/architecture-governance.md',
+  'docs/maintainers/rfc-process.md',
 ];
 
 const REQUIRED_GOVERNANCE_SECTIONS = [

@@ -222,4 +222,6 @@ For in-depth operational procedures, refer to the maintainer documentation suite
 | 🗄️ **[Database Migration Policy](file:///Users/bozoegg/Downloads/nova/docs/maintainers/database-migration-policy.md)** | Zero-downtime schema evolution, expand-contract pattern, and lock safety. |
 | 👥 **[Onboarding & Offboarding Runbook](file:///Users/bozoegg/Downloads/nova/docs/maintainers/onboarding-and-offboarding.md)** | Maintainer provisioning, 2FA/GPG enforcement, permission matrices, and offboarding. |
 | 🏛️ **[Architecture Governance](file:///Users/bozoegg/Downloads/nova/docs/maintainers/architecture-governance.md)** | ADR lifecycle, anti-dependency creep rules, and subsystem decoupling. |
+| 📑 **[Request for Comments (RFC) Process](file:///Users/bozoegg/Downloads/nova/docs/maintainers/rfc-process.md)** | Formal RFC process for proposing non-trivial architectural, protocol wire, or scheduling algorithm evolutions. |
+
 

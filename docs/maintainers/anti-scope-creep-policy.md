@@ -55,12 +55,19 @@ Allowing NOVA to be imported or bundled into host product applications (such as 
 └─────────────────────────────────┘        └──────────────────────────────────┘
 ```
 
-1. **Event Loop Starvation & Latency Spikes:** High-velocity token streaming over WebSockets requires rapid, unblocked microtask scheduling. If shared with a product's server-rendered views, heavy database queries, or file transformations, streaming latency degrades immediately.
-2. **Blast Radius Cascades:** A memory leak or unhandled exception in the product layer terminates the host process, abruptly severing hundreds of active streaming LLM connections across all users.
-3. **Cryptographic Key Exposure:** NOVA's credential vault utilizes AES-256-GCM envelope encryption with sensitive master keys (`$GALX_VAULT_KEY`). Embedding NOVA inside client application bundles risks exposing cryptographic keys through client-side bundles, memory dumps, or verbose application logging.
-4. **Maintenance Deadlock & Code Pollution:** If NOVA accommodates product-specific requirements (e.g. user authentication models, Stripe billing webhooks, custom frontend templates), the core substrate quickly becomes unmaintainable.
+1. **The Shared Event Loop Stall (Inter-Token Latency Degradation):**
+   Node.js relies on a single-threaded event loop for JavaScript task execution and network I/O polling. High-velocity token streaming over WebSockets requires microsecond-level loop dispatching. If the relay shares an event loop with a product's server-rendered views, heavy GraphQL resolvers, or synchronous JSON transformations, event loop lag directly causes Inter-Token Latency (ITL) stalls, triggering client timeouts and ruining generation smoothness.
+2. **Cascading Blast Radius & Process Fatality:**
+   An unhandled exception, fatal memory allocation failure (OOM), or unhandled promise rejection in the product layer terminates the host OS process. In an embedded architecture, this crash destroys active WebSocket streams, drops pending in-flight queue jobs, and corrupts in-progress credential leases across all tenants. Running NOVA out-of-process ensures zero blast radius contamination.
+3. **Cryptographic Key Bleed & Supply-Chain Exposure:**
+   The NOVA vault utilizes AES-256-GCM envelope encryption with sensitive master keys (`$GALX_VAULT_KEY`) and decrypted upstream shard tokens. Embedding NOVA in a product application exposes these secrets to product-level logging, crash reporting services (e.g. Sentry), and untrusted third-party npm dependencies within the product's dependency tree.
+4. **Autoscaling Asymmetry & Resource Inefficiency:**
+   Product applications scale dynamically based on HTTP page impressions, user sessions, or business transactions. Inference relay daemons scale based on concurrent persistent WebSockets, open socket file descriptors, and queue buffer depths. Coupling them forces infrastructure operators to over-provision expensive product instances rather than scaling lean, high-concurrency relay containers.
+5. **Architectural Erosion & Direct State Bypassing:**
+   Embedding creates an irresistible temptation for product developers to directly mutate internal MinHeap arrays, bypass SWRR balance tables, or skip monotonic fencing lease validation in PostgreSQL. Operating strictly over network sockets enforces clean, immutable protocol boundaries.
 
 ---
+
 
 ## The Scope Boundary Matrix
 

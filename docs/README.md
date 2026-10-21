@@ -117,8 +117,10 @@
 - [Zero-Downtime Database Migration & DDL Lock Safety](./maintainers/database-migration-policy.md)
 - [Maintainer Onboarding, FIDO2/GPG & Offboarding](./maintainers/onboarding-and-offboarding.md)
 - [Architecture Governance & Anti-Dependency Policy](./maintainers/architecture-governance.md)
+- [Request for Comments (RFC) Process](./maintainers/rfc-process.md)
 
 ---
+
 
 
 <a id="documentation-governance"></a>

@@ -12,7 +12,11 @@ This guide walks through configuring, starting, and verifying a local NOVA insta
 
 No external databases (PostgreSQL, Redis, RabbitMQ) are required for local development. NOVA automatically creates an in-memory BroccoliDB workspace for state checkpoints, prompt idempotency hashes, and the infused BroccoliQueue engine.
 
+> [!IMPORTANT]
+> **Standalone Daemon Execution:** NOVA is strictly an out-of-process infrastructure daemon. Run it in its own terminal or background process on port 3001. Never attempt to import or bundle the NOVA server runtime directly into your frontend or product application codebase! External applications connect exclusively over network wire protocols (HTTP/SSE).
+
 ---
+
 
 ## 1. Installation
 
