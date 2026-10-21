@@ -17,7 +17,8 @@
     "nova": "node --import tsx bin/nova.ts",
     "db:migrate": "node --import tsx bin/migrate.ts",
     "db:seed": "node --import tsx bin/migrate.ts --seed",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint:docs": "node --import tsx scripts/lint-docs.ts"
   },
   "dependencies": {
     "@noorm/broccolidb": "https://codeload.github.com/CardSorting/ABroccoliDB/tar.gz/f085f3f5dbceadc4cd6752b081ebfc51b02fe3f7",
