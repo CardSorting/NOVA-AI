@@ -3,7 +3,8 @@
  * NOVA Documentation Linter & CI/CD Freshness Gate
  *
  * Enforces documentation integrity, validates links, guards against stale/deprecated
- * terminology, verifies code block syntax, and ensures ADR metadata compliance.
+ * terminology, verifies code block syntax, prevents orphaned documentation,
+ * and ensures ADR metadata compliance.
  */
 
 import * as fs from 'node:fs';
@@ -117,6 +118,7 @@ function extractAnchors(content: string): Set<string> {
     if (headingMatch) {
       const headingText = headingMatch[1].trim();
       const clean = headingText.toLowerCase().replace(/<[^>]+>/g, '');
+      
       // Variant 1: Collapse multiple spaces to single dash
       const slug1 = clean.replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-');
       anchors.add(slug1);
@@ -152,6 +154,7 @@ function lintMarkdownFile(filePath: string): void {
   let inCodeBlock = false;
   let codeBlockLang = '';
   let codeBlockStartLine = 0;
+  let h1Count = 0;
 
   for (let i = 0; i < lines.length; i++) {
     const lineNum = i + 1;
@@ -168,7 +171,7 @@ function lintMarkdownFile(filePath: string): void {
             file: relativePath,
             line: lineNum,
             rule: 'invalid-code-language',
-            message: `Unknown code block language tag: "${codeBlockLang}". Use a supported tag (ts, bash, json, yaml, sql, python, mermaid, text).`,
+            message: `Unknown code block language tag: "${codeBlockLang}". Use a supported tag (ts, bash, json, yaml, sql, python, mermaid, ini, diff, text).`,
             severity: 'warning',
           });
         }
@@ -181,6 +184,20 @@ function lintMarkdownFile(filePath: string): void {
 
     // Skip linting inside code blocks for natural prose checks
     if (!inCodeBlock) {
+      // Rule: Check for H1 headings
+      if (/^#\s+[^\s]/.test(line)) {
+        h1Count++;
+        if (h1Count > 1) {
+          ISSUES.push({
+            file: relativePath,
+            line: lineNum,
+            rule: 'multiple-h1-headings',
+            message: `Document has multiple top-level # (H1) headings. Use exactly one H1 title and use ## (H2) or ### (H3) for subheadings.`,
+            severity: 'warning',
+          });
+        }
+      }
+
       // Rule: Check for stale / forbidden terminology
       for (const pattern of STALE_PATTERNS) {
         if (pattern.regex.test(line)) {
@@ -209,7 +226,6 @@ function lintMarkdownFile(filePath: string): void {
         // Local fragment anchor: e.g. #quickstart
         if (rawTarget.startsWith('#')) {
           const anchor = rawTarget.slice(1).toLowerCase();
-          // Decoded anchor comparison
           const decoded = decodeURIComponent(anchor);
           if (!fileAnchors.has(anchor) && !fileAnchors.has(decoded)) {
             ISSUES.push({
@@ -226,8 +242,7 @@ function lintMarkdownFile(filePath: string): void {
         // file:/// absolute local links
         if (rawTarget.startsWith('file:///')) {
           const cleanPath = rawTarget.replace('file://', '');
-          // Remove hash fragment if present
-          const [filePathOnly, fragment] = cleanPath.split('#');
+          const [filePathOnly] = cleanPath.split('#');
           if (!fs.existsSync(filePathOnly)) {
             ISSUES.push({
               file: relativePath,
@@ -241,7 +256,7 @@ function lintMarkdownFile(filePath: string): void {
         }
 
         // Relative path links: e.g. ./setup/local-development.md or ../CONTRIBUTING.md
-        const [relPathOnly, fragment] = rawTarget.split('#');
+        const [relPathOnly] = rawTarget.split('#');
         const resolvedPath = path.resolve(path.dirname(filePath), relPathOnly);
         if (!fs.existsSync(resolvedPath)) {
           ISSUES.push({
@@ -290,6 +305,41 @@ function validateAdrStructure(file: string, content: string): void {
 }
 
 // ============================================================================
+// ORPHANED DOCUMENT CHECK
+// ============================================================================
+
+function checkOrphanedDocs(allFiles: string[]): void {
+  const docsFiles = allFiles
+    .map(f => path.relative(REPO_ROOT, f))
+    .filter(f => f.startsWith('docs/') && !f.endsWith('docs/README.md'));
+
+  // Concatenate all index files to find references
+  const indexFiles = [
+    path.join(REPO_ROOT, 'README.md'),
+    path.join(REPO_ROOT, 'docs', 'README.md'),
+    ...allFiles.filter(f => f.endsWith('README.md')),
+  ];
+
+  const aggregatedIndexes = indexFiles
+    .filter(f => fs.existsSync(f))
+    .map(f => fs.readFileSync(f, 'utf-8'))
+    .join('\n');
+
+  for (const doc of docsFiles) {
+    const baseName = path.basename(doc);
+    if (!aggregatedIndexes.includes(baseName)) {
+      ISSUES.push({
+        file: doc,
+        line: 1,
+        rule: 'orphaned-doc',
+        message: `Document "${doc}" is not referenced in any README or Knowledge Base index. Add a link to preserve navigation discoverability.`,
+        severity: 'warning',
+      });
+    }
+  }
+}
+
+// ============================================================================
 // CLI RUNNER & FORMATTED REPORTING
 // ============================================================================
 
@@ -302,6 +352,8 @@ function main(): void {
   for (const file of files) {
     lintMarkdownFile(file);
   }
+
+  checkOrphanedDocs(files);
 
   const errors = ISSUES.filter(i => i.severity === 'error');
   const warnings = ISSUES.filter(i => i.severity === 'warning');
