@@ -1,0 +1,40 @@
+{
+  "name": "nova",
+  "version": "1.0.0",
+  "description": "NOVA: Autonomous Inference Relay Gateway & Resource Routing Substrate",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "bin": {
+    "nova": "./bin/nova.ts",
+    "nova-relay": "./bin/relay.ts",
+    "nova-pool": "./bin/pool.ts"
+  },
+  "scripts": {
+    "test": "node --import tsx --test tests/*.test.ts",
+    "start:relay": "node --import tsx bin/relay.ts",
+    "start:pool": "node --import tsx bin/pool.ts",
+    "nova": "node --import tsx bin/nova.ts",
+    "db:migrate": "node --import tsx bin/migrate.ts",
+    "db:seed": "node --import tsx bin/migrate.ts --seed",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@noorm/broccolidb": "https://codeload.github.com/CardSorting/ABroccoliDB/tar.gz/f085f3f5dbceadc4cd6752b081ebfc51b02fe3f7",
+    "broccoli-queue": "https://codeload.github.com/CardSorting/BROCCOLIQUEUE/tar.gz/c38a7db40e8bcaf99c7f83af755c5e43a6d7feec",
+    "pg": "^8.13.0",
+    "sharp": "^0.33.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.11.0",
+    "@types/sharp": "^0.31.0",
+    "@types/ws": "^8.5.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
