@@ -13,44 +13,49 @@
 
 ### Autonomous Inference Relay Gateway & Resource Routing Substrate
 
-*High-performance, fault-tolerant AI inference coordination, multi-account credential pooling, and resilient WebSocket streaming extracted from GALX.*
+*Enterprise-grade AI inference coordination, multi-account credential pooling, native in-process job queueing, and resilient WebSocket streaming extracted from GALX.*
 
 ---
 
 [![Tests](https://img.shields.io/badge/tests-23%20passing-brightgreen.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/tests)
-[![Queue Engine](https://img.shields.io/badge/BroccoliQueue-Native%20Infused-success.svg?style=flat-square)](#4-native-infused-broccoliqueue-engine--novarequestqueue)
+[![Queue Engine](https://img.shields.io/badge/BroccoliQueue-Native%20Infused-success.svg?style=flat-square)](#native-broccoliqueue-engine)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6%20Strict-blue.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/tsconfig.json)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D20.0.0-emerald.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/package.json)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14--17%2B-blueviolet.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/db/schema.sql)
 [![Protocol](https://img.shields.io/badge/OpenAI-Compatible-orange.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/src/relay/relay-server.ts)
-[![Latency Overhead](https://img.shields.io/badge/routing%20overhead-%3C0.4ms-success.svg?style=flat-square)](#benchmarks--performance-overhead)
-[![License](https://img.shields.io/badge/license-MIT-purple.svg?style=flat-square)](#-license)
-[![Zero Supabase Bloat](https://img.shields.io/badge/Supabase%20Bloat-0%25%20Distilled-success.svg?style=flat-square)](#-distilled-postgresql-layer-zero-supabase-bloat)
+[![Routing Overhead](https://img.shields.io/badge/routing%20overhead-%3C0.4ms-success.svg?style=flat-square)](#benchmarks--performance-overhead)
+[![License](https://img.shields.io/badge/license-MIT-purple.svg?style=flat-square)](#license)
+[![Zero Supabase Bloat](https://img.shields.io/badge/Supabase%20Bloat-0%25%20Distilled-success.svg?style=flat-square)](#distilled-postgresql-layer)
 
-[⚡ 60s Quickstart](#-60-second-quickstart) •
-[🏛️ Architecture](#-architecture--system-topology) •
-[🔌 Gateway APIs](#-gateway-api-reference-openai-compatible) •
-[👥 Shard Management](#-shard-fleet-management--enrollment) •
-[📦 TypeScript SDK](#-typescript-client-sdk) •
-[⚙️ Config Matrix](#%EF%B8%8F-configuration--environment-variables) •
-[🐳 Production Runbook](#-production-deployment-runbook)
+[⚡ Quickstart](#quickstart) •
+[🏛️ Architecture](#architecture) •
+[🔌 Gateway APIs](#gateway-apis) •
+[👥 Shard Fleet](#shard-fleet) •
+[🥦 Queue Engine](#native-broccoliqueue-engine) •
+[📦 Client SDKs](#client-sdks) •
+[⚙️ Config Matrix](#configuration-matrix) •
+[🐳 Deployment](#production-deployment) •
+[🧪 23 Tests](#testing-and-verification)
 
 </div>
 
 ---
 
+<a id="table-of-contents"></a>
 ## ⚡ Quick Navigation
 
-| Getting Started & Concepts | APIs & Integrations | Technical Deep Dives | Ops, Database & Safety |
+| Getting Started & Concepts | APIs & Integrations | Core Mechanics & Queues | Ops, Database & Safety |
 | :--- | :--- | :--- | :--- |
-| • [Why NOVA?](#why-nova) | • [Gateway API Reference](#-gateway-api-reference-openai-compatible) | • [Smooth Weighted Round Robin](#1-smooth-weighted-round-robin-swrr) | • [Distilled PostgreSQL](#-distilled-postgresql-layer-zero-supabase-bloat) |
-| • [60-Second Quickstart](#-60-second-quickstart) | • [TypeScript Client SDK](#-typescript-client-sdk) | • [Continuous Token Buckets](#2-continuous-token-bucket-rate-governor) | • [Configuration Matrix](#%EF%B8%8F-configuration--environment-variables) |
-| • [Multi-Language Clients](#multi-language-client-examples) | • [Official OpenAI SDK](#2-official-openai-typescript--node-sdk) | • [Canary Circuit Breaker](#3-canary-circuit-breaker--outlier-detection) | • [Docker & K8s Manifests](#-production-deployment-runbook) |
-| • [Architecture & Dataflow](#-architecture--system-topology) | • [Python SDK & LangChain](#3-official-openai-python-sdk) | • [BroccoliDB WAL Queue](#4-broccolidb-write-ahead-log-wal-request-queue) | • [Troubleshooting Matrix](#-operational-troubleshooting--error-taxonomy) |
-| • [Feature Comparison](#feature-comparison-matrix) | • [Shard Enrollment Guide](#-shard-fleet-management--enrollment) | • [Privacy Firewall & Masking](#6-zero-leak-privacy-firewall) | • [Testing & Verification](#-testing-benchmarks--verification) |
+| • [Why NOVA?](#why-nova) | • [Gateway API Reference](#gateway-apis) | • [Smooth Weighted Round Robin](#1-smooth-weighted-round-robin-swrr) | • [Distilled PostgreSQL Layer](#distilled-postgresql-layer) |
+| • [Feature Comparison](#feature-comparison-matrix) | • [Tool Use & Function Calls](#1-post-v1chatcompletions) | • [Continuous Token Buckets](#2-continuous-token-bucket-rate-governor) | • [Configuration Matrix](#configuration-matrix) |
+| • [60-Second Quickstart](#quickstart) | • [Image Generation & Sharp](#2-post-v1imagesgenerations) | • [Canary Circuit Breaker](#3-canary-circuit-breaker--outlier-detection) | • [Docker & K8s Manifests](#production-deployment) |
+| • [Multi-Language Clients](#multi-language-clients) | • [Async Jobs & Streaming](#3-asynchronous-queue-decoupling-http-202) | • [Native BroccoliQueue Engine](#native-broccoliqueue-engine) | • [Troubleshooting & Errors](#troubleshooting-matrix) |
+| • [Architecture & Dataflow](#architecture) | • [TypeScript Client SDK](#client-sdks) | • [Distributed Fenced Leases](#5-distributed-fenced-leases) | • [Testing & 23-Test Suite](#testing-and-verification) |
+| • [Project Structure](#project-structure) | • [Shard Enrollment Guide](#shard-fleet) | • [7-Layer Timeout Hierarchy](#7-layer-websocket-timeout-hierarchy) | • [Contributing & License](#contributing) |
 
 ---
 
+<a id="why-nova"></a>
 ## Why NOVA?
 
 Deploying large-scale generative AI applications into production presents severe operational challenges:
@@ -71,34 +76,39 @@ Deploying large-scale generative AI applications into production presents severe
 
 **NOVA** is engineered to eliminate every single one of these failure modes:
 
-- 🌊 **Algorithmic Credential Pooling:** Aggregates and load-balances across dozens of accounts using **Smooth Weighted Round Robin (SWRR)**, preventing burst quota exhaustion.
+- 🌊 **Algorithmic Credential Pooling:** Aggregates and load-balances across dozens of active shard accounts using **Smooth Weighted Round Robin (SWRR)**, preventing burst quota exhaustion.
 - ⚡ **Continuous Token-Bucket Governance:** Real-time RPM and TPM tracking with **2-Phase Atomic Reservations** and automatic **Unconsumed Token Refunds** upon stream completion.
 - 🛡️ **Canary Circuit Breakers:** Dissects transient errors (502/503/504/ITL stall) vs. terminal revocations (401/Invalid Key). Automatically quarantines failing shards with exponential full-jitter backoff and admits single-canary probes for safe recovery.
 - 🔄 **Resilient WebSocket Bridging:** Bridges OpenAI/Codex WebSocket streaming with a **7-Layer Timeout Hierarchy**, monitoring Inter-Token Latency (ITL) gaps and EWMA pacing to instantly drop dead streams.
+- 🥦 **Native Infused Job Queue (BroccoliQueue):** High-throughput, in-process persistent job queue on BroccoliDB tables with three MinHeaps, lease renewal heartbeats, exponential retries, and zero Redis/BullMQ dependencies.
 - 🔒 **Durable Stream Idempotency:** SHA-256 prompt and parameter hashing with atomic in-flight stream collapsing, guaranteeing clients re-attaching to retries never double-bill your accounts.
 - 🛡️ **Zero-Leak Privacy Firewall:** Strips all upstream shard IDs, auth bearer keys, database connection strings, and raw stack traces from caller responses.
-- 🗄️ **Distilled PostgreSQL Layer:** Distills 159 legacy Supabase migrations into **one clean, self-contained schema (`db/schema.sql`)** with zero cloud vendor locks.
+- 🗄️ **Distilled PostgreSQL Layer:** Distills 159 legacy Supabase migrations into **one clean, self-contained schema ([db/schema.sql](file:///Users/bozoegg/Downloads/nova/db/schema.sql))** with zero cloud vendor locks.
 
 ---
 
+<a id="feature-comparison-matrix"></a>
 ## Feature Comparison Matrix
 
 | Capability | Standard Reverse Proxy (Nginx / Envoy / Traefik) | Generic LLM Gateway (LiteLLM / Portkey) | Cloud Multi-Tenant PaaS (Supabase / AWS API GW) | **NOVA Substrate (Relay + Pool Coordinator)** |
 | :--- | :---: | :---: | :---: | :---: |
 | **OpenAI-Compatible Wire Protocol** | ❌ (Raw HTTP only) | ✅ (HTTP / REST) | ❌ (Proprietary SDKs) | **✅ Streaming SSE & Synchronous** |
+| **Tool Use & Function Calling** | ❌ (None) | ⚠️ (Pass-through) | ❌ (None) | **✅ Strict Validation & Output Budgeting** |
 | **Algorithmic Credential Pooling** | ❌ (Static round robin) | ⚠️ (Basic random / fallback) | ❌ (Single tenant auth) | **✅ Smooth Weighted Round Robin (SWRR)** |
 | **Two-Phase Token Bucket Rate Governance** | ❌ (Basic RPM limiter) | ⚠️ (Static TPM estimates) | ❌ (Credit ledger only) | **✅ Continuous Leaky Bucket + Refund** |
 | **Circuit Breakers with Canary Probing** | ⚠️ (Basic health checks) | ⚠️ (Threshold trip) | ❌ (None) | **✅ Transient vs. Terminal + Canary Slots** |
 | **Resilient WebSocket Bridging** | ❌ (Blind TCP stream) | ❌ (HTTP-to-HTTP only) | ❌ (Edge functions only) | **✅ 7-Layer Timeout Hierarchy & ITL Pacing** |
 | **Durable Idempotency & Stream Attachment**| ❌ (None) | ⚠️ (Response caching) | ❌ (Manual implementation) | **✅ Atomic In-Flight Stream Deduplication** |
 | **Privacy Firewall & Error Sanitization** | ❌ (Pass-through headers) | ⚠️ (Partial redaction) | ❌ (Raw upstream errors) | **✅ Strict Zero-Leak Response Allowlist** |
-| **Write-Ahead-Log (WAL) Request Queue** | ❌ (None) | ⚠️ (Redis required) | ⚠️ (External SQS / Celery) | **✅ Embedded BroccoliDB WAL Engine** |
+| **Embedded Write-Ahead-Log (WAL) Queue**| ❌ (None) | ⚠️ (Redis required) | ⚠️ (External SQS / Celery) | **✅ Native Infused BroccoliQueue (3 Heaps)** |
 | **Distributed Fenced Leases** | ❌ (None) | ❌ (None) | ⚠️ (Advisory locks) | **✅ Monotonic Fencing Tokens (Postgres & Memory)** |
+| **Image Sanitization Pipeline** | ❌ (None) | ❌ (Pass-through) | ⚠️ (Storage buckets only) | **✅ In-Flight Sharp sRGB Normalizer** |
 | **Database Footprint** | ❌ (N/A) | ⚠️ (Redis + SQLite/Postgres) | ❌ (150+ migrations & Supabase bloat) | **✅ 1 Distilled Schema (Zero Supabase Bloat)** |
 | **Sub-Millisecond Routing Overhead** | ✅ (<1ms) | ⚠️ (5ms - 15ms) | ❌ (30ms - 100ms) | **✅ <0.4ms In-Memory Microsecond Indexing** |
 
 ---
 
+<a id="quickstart"></a>
 ## ⚡ 60-Second Quickstart
 
 Get NOVA running locally in less than 60 seconds. Zero external databases or cloud services required to start.
@@ -115,7 +125,7 @@ npm install
 ```
 
 ### 2. Run the Verification Suite
-Execute the comprehensive test suite (all 17 unit and integration tests run in under 300ms):
+Execute the comprehensive test suite (all 23 unit and integration tests run in under 700ms):
 ```bash
 npm test
 ```
@@ -140,10 +150,11 @@ Output:
 ```
 
 > [!TIP]
-> NOVA automatically creates an in-memory SQLite/BroccoliDB table for state checkpoints and idempotency hashes. You do not need to install or configure PostgreSQL to start serving requests locally!
+> NOVA automatically creates in-memory BroccoliDB tables for state checkpoints, idempotency hashes, and the embedded BroccoliQueue. You do not need to install or configure PostgreSQL to start serving requests locally!
 
 ---
 
+<a id="multi-language-clients"></a>
 ## Multi-Language Client Examples
 
 NOVA provides 100% protocol fidelity with the OpenAI API. Point any standard SDK or HTTP client to `http://127.0.0.1:3001/v1`.
@@ -231,8 +242,9 @@ for chunk in response:
 
 ---
 
-### 4. LangChain Integration (Python)
+### 4. LangChain Integration (Python & TypeScript)
 
+#### Python:
 ```python
 from langchain_openai import ChatOpenAI
 
@@ -247,10 +259,28 @@ response = llm.invoke("Design a fault-tolerant multi-tenant architecture.")
 print(response.content)
 ```
 
+#### TypeScript:
+```typescript
+import { ChatOpenAI } from "@langchain/openai";
+
+const model = new ChatOpenAI({
+  configuration: {
+    baseURL: "http://127.0.0.1:3001/v1",
+    apiKey: "sk-nova-live-demo",
+  },
+  modelName: "gpt-4o",
+  temperature: 0.2,
+});
+
+const res = await model.invoke("Summarize the benefits of continuous token buckets.");
+console.log(res.content);
+```
+
 [▲ Return to Top](#nova)
 
 ---
 
+<a id="architecture"></a>
 ## 🏛️ Architecture & System Topology
 
 NOVA separates external API ingress from internal shard state management through a strictly partitioned Northbound / Southbound boundary:
@@ -258,9 +288,9 @@ NOVA separates external API ingress from internal shard state management through
 ```
                             [ Inbound Client Applications ]
                          (cURL / Python / TypeScript / OpenAI SDK)
-                                    │
-                                    ▼ HTTP / SSE
-┌───────────────────────────────────┴────────────────────────────────────────┐
+                                     │
+                                     ▼ HTTP / SSE
+┌────────────────────────────────────┴────────────────────────────────────────┐
 │                        NOVA RELAY GATEWAY (Port 3001)                      │
 │                                                                            │
 │  ┌───────────────────────┐  ┌──────────────────────┐  ┌─────────────────┐  │
@@ -292,8 +322,8 @@ NOVA separates external API ingress from internal shard state management through
 │                │                                        │                  │
 │                ▼                                        ▼                  │
 │  ┌───────────────────────────┐           ┌──────────────────────────────┐  │
-│  │ Circuit Breaker & Canary  │           │ Bounded Waiting Room & Fair  │  │
-│  │ Probing Engine            │           │ BroccoliDB WAL Queue         │  │
+│  │ Circuit Breaker & Canary  │           │ Native Infused BroccoliQueue │  │
+│  │ Probing Engine            │           │ (3 MinHeaps, WAL Persist)    │  │
 │  └─────────────┬─────────────┘           └──────────────┬───────────────┘  │
 │                │                                        │                  │
 │                ▼                                        ▼                  │
@@ -320,6 +350,7 @@ sequenceDiagram
     participant Relay as NovaRelayServer
     participant Idemp as Idempotency Engine
     participant Pool as NovaCredentialPool
+    participant Queue as BroccoliQueue (MinHeaps)
     participant Shard as Upstream Shard (Codex/OpenAI)
     participant Store as ExecutionStore (Postgres / Memory)
 
@@ -339,9 +370,10 @@ sequenceDiagram
         Relay->>Shard: Open/Reuse WS Connection (7-Layer Timeout Guard)
         Relay->>Shard: Dispatch Payload Frame
         
-        loop Token Streaming with ITL Monitoring
+        loop Token Streaming with ITL Monitoring & Lease Heartbeats
             Shard-->>Relay: WS Output Delta Frame
             Relay->>Relay: Monitor EWMA Inter-Token Latency (Stall Check)
+            Relay->>Store: Renew Lease Heartbeat (prevent orphan recovery)
             Relay-->>Client: SSE data: {"choices":[{"delta":{"content":"..."}}]}
         end
         
@@ -357,30 +389,43 @@ sequenceDiagram
 
 ---
 
+<a id="gateway-apis"></a>
 ## 🔌 Gateway API Reference (OpenAI-Compatible)
 
 Every public endpoint strictly adheres to the official OpenAI specifications while injecting robust enterprise resilience headers.
 
-### Endpoint Matrix
+### Complete Route Matrix
 
-```
-POST   /v1/chat/completions       Streaming (SSE) or synchronous chat completions
-POST   /v1/images/generations     Synthesize images with Sharp sRGB profile normalizations
-GET    /v1/models                 List active eligible models across all healthy shards
-GET    /v1/jobs/:id               Inspect asynchronous decoupled job status & usage
-GET    /v1/jobs/:id/stream        Re-attach or resume an active SSE token stream
-POST   /v1/jobs/:id/cancel        Instant wire abort & immediate lease release (<5ms)
-GET    /health                    Kubernetes liveness and basic process health probe
-GET    /health/ready              Kubernetes readiness probe (verifies memory & shards)
-GET    /metrics                   Prometheus-compatible real-time metrics (Admin key)
-GET    /api/telemetry             Aggregated latency percentiles & throughput (Admin key)
-```
+| Method | Path | Auth Scope | Description |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/v1/chat/completions` | Public / Tenant | Streaming (SSE) or synchronous chat completions with Tool Calls |
+| `POST` | `/v1/images/generations` | Public / Tenant | Synthesize images with Sharp sRGB profile normalizations |
+| `GET` | `/v1/models` | Public / Tenant | List active eligible models across all healthy shards |
+| `GET` | `/v1/jobs/:id` | Public / Tenant | Inspect asynchronous decoupled job status & usage |
+| `GET` | `/v1/jobs/:id/stream` | Public / Tenant | Re-attach or resume an active SSE token stream (`Last-Event-ID`) |
+| `POST` | `/v1/jobs/:id/cancel` | Public / Tenant | Instant wire abort & immediate lease release (<5ms) |
+| `GET` | `/v1/jobs/:id/receipt` | Public / Tenant | Inspect durable admission receipt record |
+| `GET` | `/health` | Unauthenticated | Kubernetes liveness probe (HTTP 200 OK) |
+| `GET` | `/health/ready` | Unauthenticated | Kubernetes readiness probe (verifies memory ceiling & healthy shards) |
+| `GET` | `/health/live` | Unauthenticated | Process liveness verification |
+| `GET` | `/metrics` | Admin Key | Prometheus-compatible real-time metrics exporter |
+| `GET` | `/telemetry` / `/api/telemetry` | Admin Key | Aggregated latency percentiles (p50, p95, p99) & throughput |
+| `GET` | `/api/capabilities` | Admin Key | View available model capabilities across shard fleet |
+| `POST` | `/api/capabilities/probe-image`| Admin Key | Probe shard image generation qualification |
+| `GET` | `/api/sites/contract` | Admin Key | Inspect site contract parameters |
+| `GET` | `/api/dashboard/stats` | Admin Key | Inspect real-time gateway metrics and active jobs |
+| `POST` | `/api/quota/profile` | Admin Key | Update quota profile and rate parameters |
+| `POST` | `/api/quota/reset` | Admin Key | Force reset rolling quota window for shards |
+| `GET` | `/api/quota/status` | Admin Key | View rolling quota utilization and limits |
+| `POST` | `/api/shards/enroll` | Admin Key | Dynamically enroll new shard credentials without restart |
+| `POST` | `/api/shards/sync` | Admin Key | Force reload and synchronization of shard accounts from PostgreSQL |
+| `GET` | `/api/shards` | Admin Key | Inspect shard fleet with masked API keys |
 
 ---
 
 ### 1. `POST /v1/chat/completions`
 
-Generates chat completions for given messages.
+Generates chat completions for given messages. Supports streaming SSE, synchronous aggregation, tool calls, and parallel tool calls.
 
 #### Request Headers
 | Header | Type | Required | Description |
@@ -396,7 +441,7 @@ Generates chat completions for given messages.
   "model": "gpt-4o",
   "messages": [
     { "role": "system", "content": "You are a precise technical architect." },
-    { "role": "user", "content": "Summarize continuous token buckets." }
+    { "role": "user", "content": "Fetch the status of the database cluster." }
   ],
   "temperature": 0.7,
   "max_tokens": 1024,
@@ -416,7 +461,9 @@ Generates chat completions for given messages.
         }
       }
     }
-  ]
+  ],
+  "tool_choice": "auto",
+  "parallel_tool_calls": true
 }
 ```
 
@@ -434,15 +481,25 @@ Generates chat completions for given messages.
       "index": 0,
       "message": {
         "role": "assistant",
-        "content": "A continuous token bucket allows smooth rate governance by continuously refilling tokens based on elapsed milliseconds, evaluating both requests per minute (RPM) and tokens per minute (TPM)."
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_98127391823",
+            "type": "function",
+            "function": {
+              "name": "lookup_cluster_metrics",
+              "arguments": "{\"cluster_id\":\"nova-primary\"}"
+            }
+          }
+        ]
       },
-      "finish_reason": "stop"
+      "finish_reason": "tool_calls"
     }
   ],
   "usage": {
-    "prompt_tokens": 28,
-    "completion_tokens": 36,
-    "total_tokens": 64
+    "prompt_tokens": 42,
+    "completion_tokens": 21,
+    "total_tokens": 63
   }
 }
 ```
@@ -459,11 +516,11 @@ Connection: keep-alive
 X-RateLimit-Limit-Tokens: 500000
 X-RateLimit-Remaining-Tokens: 498760
 
-data: {"id":"chatcmpl_9b7d","object":"chat.completion.chunk","created":1729497600,"model":"gpt-4o","choices":[{"index":0,"delta":{"role":"assistant","content":"A"},"finish_reason":null}]}
+data: {"id":"chatcmpl_9b7d","object":"chat.completion.chunk","created":1729497600,"model":"gpt-4o","choices":[{"index":0,"delta":{"role":"assistant","content":"The"},"finish_reason":null}]}
 
-data: {"id":"chatcmpl_9b7d","object":"chat.completion.chunk","created":1729497600,"model":"gpt-4o","choices":[{"index":0,"delta":{"content":" continuous"},"finish_reason":null}]}
+data: {"id":"chatcmpl_9b7d","object":"chat.completion.chunk","created":1729497600,"model":"gpt-4o","choices":[{"index":0,"delta":{"content":" database"},"finish_reason":null}]}
 
-data: {"id":"chatcmpl_9b7d","object":"chat.completion.chunk","created":1729497600,"model":"gpt-4o","choices":[{"index":0,"delta":{"content":" token bucket..."},"finish_reason":null}]}
+data: {"id":"chatcmpl_9b7d","object":"chat.completion.chunk","created":1729497600,"model":"gpt-4o","choices":[{"index":0,"delta":{"content":" cluster is operating normally."},"finish_reason":null}]}
 
 data: [DONE]
 ```
@@ -507,6 +564,7 @@ Synthesizes images using upstream image engines with automated Sharp-based sRGB 
 
 ---
 
+<a id="3-asynchronous-queue-decoupling-http-202"></a>
 ### 3. Asynchronous Queue Decoupling (`HTTP 202 Accepted`)
 
 When the cluster is under heavy burst load and the in-flight bulkhead is saturated, NOVA immediately returns `HTTP 202 Accepted` with an execution receipt:
@@ -526,6 +584,7 @@ Clients can poll `GET /v1/jobs/:id` or connect to `GET /v1/jobs/:id/stream` to r
 
 ---
 
+<a id="shard-fleet"></a>
 ## 👥 Shard Fleet Management & Enrollment
 
 NOVA supports dynamically pooling multiple upstream AI accounts without downtime. Shards can be enrolled through the administrative HTTP API or loaded from an encrypted local fleet file (`.galx-shards.json`).
@@ -602,6 +661,78 @@ Ciphertext + 12-byte IV + 16-byte Auth Tag
 
 ---
 
+<a id="native-broccoliqueue-engine"></a>
+## 🥦 Native Infused BroccoliQueue Engine
+
+NOVA natively embeds the high-throughput, in-process **BroccoliQueue** engine ([src/queue/](file:///Users/bozoegg/Downloads/nova/src/queue/)), eliminating external queue services (Redis, RabbitMQ, SQS, or BullMQ) while maintaining crash-resilient persistence on BroccoliDB tables.
+
+### Architecture & Three MinHeaps
+
+```
+                  ┌────────────────────────────────────────────────────────┐
+                  │                 BROCCOLIQUEUE ENGINE                   │
+                  │                                                        │
+                  │  ┌────────────────┐ ┌────────────────┐ ┌────────────┐  │
+                  │  │   Ready Heap   │ │  Delayed Heap  │ │ Lease Heap │  │
+                  │  │ Priority DESC  │ │  Deadlines ASC │ │ Expiry ASC │  │
+                  │  └───────┬────────┘ └───────┬────────┘ └─────┬──────┘  │
+                  └──────────┼──────────────────┼────────────────┼─────────┘
+                             │                  │                │
+            ┌────────────────┴──────────────────┼────────────────┴────────────────┐
+            ▼                                   ▼                                 ▼
+┌─────────────────────────┐        ┌─────────────────────────┐       ┌─────────────────────────┐
+│ Worker Batch Claiming   │        │ Scheduled Delay Timers  │       │ Lease Heartbeat Renewals│
+│ O(1) Highest Priority   │        │ O(log N) Time-To-Ready  │       │ Prevent Orphan Recovery │
+└─────────────────────────┘        └─────────────────────────┘       └─────────────────────────┘
+```
+
+#### Key Capabilities:
+- **Zero External Dependencies:** 100% self-contained in-memory indexed tables backed by an append-only WAL.
+- **Three Internal MinHeaps for $O(1)$ Scheduling:**
+  - **Ready Heap:** Orders jobs by descending priority with FIFO sequence preservation (`priority DESC, sequence ASC`).
+  - **Delayed Heap:** Orders delayed jobs by execution deadline (`availableAt ASC`).
+  - **Lease Heap:** Tracks active worker leases by expiration (`leaseExpiresAt ASC`) for sub-second crash recovery.
+- **Lease Renewal & Heartbeats (`context.heartbeat()`):** Long-running inference jobs (e.g., deep reasoning or image synthesis) automatically renew their leases, preventing premature recovery while keeping worker timeout ceilings tight.
+- **Crash-Resilient WAL Recovery:** Replays newline-delimited WAL frames with checksum validation on process restarts.
+- **Per-Tenant Fairness & Bounded Waiting Room:** `NovaRequestQueue` caps tenant burst queuing and uses deficit round-robin dispatch across tenant keys.
+- **Headless Backend Architecture:** 100% clean backend execution with zero browser UI dependencies; queue observability is exposed through native `/metrics`, `/health`, and internal telemetry endpoints.
+
+### Native Code Example
+
+```typescript
+import { BroccoliQueue, BroccoliDatabaseKernel } from './src/index.js';
+
+// 1. Initialize queue on top of local BroccoliDB workspace
+const db = new BroccoliDatabaseKernel({ workspaceRoot: './.broccolidb/queue-data' });
+const queue = new BroccoliQueue({
+  db,
+  namespace: 'nova_inference',
+  retentionMs: 3600_000 // 1 hour terminal retention
+});
+await queue.start();
+
+// 2. Register worker with lease heartbeats
+const worker = queue.process('inference_tasks', async (job, context) => {
+  // Renew lease during long inference generations:
+  await context.heartbeat();
+  return { status: 'completed', result: 'Model output' };
+}, { concurrency: 8, leaseDurationMs: 30_000 });
+await worker.start();
+
+// 3. Enqueue idempotent job batch
+await queue.add('inference_tasks', { prompt: 'Synthesize report' }, {
+  priority: 10,
+  attempts: 3,
+  backoff: { type: 'exponential', delayMs: 1000 },
+  idempotencyKey: 'request_uuid_12345'
+});
+```
+
+[▲ Return to Top](#nova)
+
+---
+
+<a id="client-sdks"></a>
 ## 📦 TypeScript Client SDK
 
 NOVA ships with a zero-dependency async client (`NovaClient`).
@@ -640,7 +771,8 @@ const image = await client.generateImage({
   prompt: 'A minimalist neon logo for an AI relay gateway',
   size: '1024x1024'
 });
-console.log('Sanitized Image Size:', `${image.artifact?.width}x${image.artifact?.height}`);
+console.log('Sanitized Image Format:', image.artifact?.contentType);
+console.log('Sanitized Image Size:', `${image.artifact?.bytes.length} bytes`);
 
 // 4. Model Capabilities Discovery
 const models = await client.listModels();
@@ -655,6 +787,7 @@ console.log('Job status:', job.status);
 
 ---
 
+<a id="cli-reference"></a>
 ## 🚀 Unified CLI Reference
 
 NOVA provides a single entrypoint CLI with dedicated subcommands:
@@ -723,6 +856,7 @@ npm run db:seed
 
 ---
 
+<a id="configuration-matrix"></a>
 ## ⚙️ Configuration & Environment Variables
 
 ### Gateway Server & Network
@@ -744,6 +878,7 @@ npm run db:seed
 | `RELAY_ADMIN_API_KEY` | Auto-generated | Operator Bearer token (`/metrics`, `/api/shards`, etc.) |
 | `GALX_VAULT_KEY` | — | AES-256-GCM master secret for decrypting shard credentials |
 
+<a id="7-layer-websocket-timeout-hierarchy"></a>
 ### 7-Layer WebSocket Timeout Hierarchy
 NOVA guards against slow, stalled, or dead upstream provider connections using a 7-layer defense:
 
@@ -775,8 +910,10 @@ NOVA guards against slow, stalled, or dead upstream provider connections using a
 
 ---
 
+<a id="algorithmic-substrates"></a>
 ## 🔬 Algorithmic Substrates Deep Dive
 
+<a id="1-smooth-weighted-round-robin-swrr"></a>
 ### 1. Smooth Weighted Round Robin (SWRR)
 Standard weighted round robin causes bursty shard selection (e.g. weights `{A: 5, B: 1}` would select `AAAAAB`). NOVA implements **Nginx Smooth Weighted Round Robin**:
 1. Every candidate shard starts with a dynamic `currentWeight = 0`.
@@ -796,6 +933,7 @@ const pool = new NovaCredentialPool(substrate, undefined, undefined, 'smooth_wei
 
 ---
 
+<a id="2-continuous-token-bucket-rate-governor"></a>
 ### 2. Continuous Token Bucket Rate Governor
 NOVA implements continuous rate evaluation with sub-millisecond precision:
 - **Two-Phase Atomic Reservations:** Before a request is dispatched, NOVA calculates an `estimatedTokens` reservation (prompt tokens + estimated output tokens) and checks both RPM (Requests Per Minute) and TPM (Tokens Per Minute).
@@ -819,58 +957,16 @@ await pool.releaseLease(reservation.lease.leaseId, {
 
 ---
 
+<a id="3-canary-circuit-breaker--outlier-detection"></a>
 ### 3. Canary Circuit Breaker & Outlier Detection
 - **Error Taxonomy Classification:** Categorizes failures into **Transient** (HTTP 502/503/504, network reset, ITL stall) vs. **Terminal** (HTTP 401 Unauthorized, Account Revoked, Invalid Quota).
 - **Outlier Shard Quarantine:** A shard incurring 3 consecutive failures enters `cooldown` with AWS full-jitter backoff:
   $$\text{backoff} = \text{random}(0, \min(\text{maxDelay}, \text{baseDelay} \times 2^{\text{failures}}))$$
 - **Single-Canary Half-Open Probing:** When the cooldown expires, the shard transitions to `half-open`. Exactly one canary request is admitted. If it succeeds, the shard is restored to `healthy`; if it fails, cooldown doubles.
 
-### 4. Native Infused BroccoliQueue Engine & NovaRequestQueue
-
-NOVA natively embeds the high-throughput, in-process **BroccoliQueue** engine (`src/queue/`), eliminating external queue services (Redis, RabbitMQ, SQS, or BullMQ) while maintaining crash-resilient persistence on BroccoliDB tables.
-
-#### Key Architectural Capabilities:
-- **Zero External Dependencies:** 100% self-contained in-memory indexed tables backed by an append-only WAL.
-- **Three Internal MinHeaps for $O(1)$ Scheduling:**
-  - **Ready Heap:** Orders jobs by descending priority with FIFO sequence preservation (`priority DESC, sequence ASC`).
-  - **Delayed Heap:** Orders delayed jobs by execution deadline (`availableAt ASC`).
-  - **Lease Heap:** Tracks active worker leases by expiration (`leaseExpiresAt ASC`) for sub-second crash recovery.
-- **Lease Renewal & Heartbeats (`context.heartbeat()`):** Long-running inference jobs (e.g., deep reasoning or image synthesis) automatically renew their leases, preventing premature recovery while keeping worker timeout ceilings tight.
-- **Crash-Resilient WAL Recovery:** Replays newline-delimited WAL frames with checksum validation on process restarts.
-- **Per-Tenant Fairness & Bounded Waiting Room:** `NovaRequestQueue` caps tenant burst queuing and uses deficit round-robin dispatch across tenant keys.
-- **Headless Backend Architecture:** 100% clean backend execution with zero browser UI dependencies; queue observability is exposed through native `/metrics`, `/health`, and internal telemetry endpoints.
-
-```typescript
-import { BroccoliQueue, BroccoliDatabaseKernel } from './src/index.js';
-
-// 1. Initialize queue on top of local BroccoliDB workspace
-const db = new BroccoliDatabaseKernel({ workspaceRoot: './.broccolidb/queue-data' });
-const queue = new BroccoliQueue({
-  db,
-  namespace: 'nova_inference',
-  retentionMs: 3600_000 // 1 hour terminal retention
-});
-await queue.start();
-
-// 2. Register worker with lease heartbeats
-const worker = queue.process('inference_tasks', async (job, context) => {
-  // Renew lease during long inference generations:
-  await context.heartbeat();
-  return { status: 'completed', result: 'Model output' };
-}, { concurrency: 8, leaseDurationMs: 30_000 });
-await worker.start();
-
-// 3. Enqueue idempotent job batch
-await queue.add('inference_tasks', { prompt: 'Synthesize report' }, {
-  priority: 10,
-  attempts: 3,
-  backoff: { type: 'exponential', delayMs: 1000 },
-  idempotencyKey: 'request_uuid_12345'
-});
-```
-
 ---
 
+<a id="5-distributed-fenced-leases"></a>
 ### 5. Distributed Fenced Leases
 Distributed execution across multiple workers requires split-brain prevention:
 - Every lease issued carries a monotonically increasing `fencingToken: bigint`.
@@ -879,19 +975,28 @@ Distributed execution across multiple workers requires split-brain prevention:
 
 ---
 
+<a id="6-zero-leak-privacy-firewall"></a>
 ### 6. Zero-Leak Privacy Firewall
 Public callers must never gain visibility into internal infrastructure topology:
 - **Header Masking:** Strips all `x-shard-id`, `x-account-key`, `cf-ray`, `openai-organization`, and internal routing headers from public responses.
 - **Error Sanitization:** All raw upstream stack traces and diagnostic objects are encrypted with AES-256-GCM or masked into standard error codes (`upstream_error`, `quota_exceeded`, `gateway_timeout`).
 - **Telemetry Allowlist:** Metrics emitted externally follow strict schema allowlists (`publicJob`, `publicUsage`).
 
+---
+
+<a id="7-request-bulkheads--output-token-budgeting"></a>
+### 7. Request Bulkheads & Output Token Budgeting
+- **Request Bulkhead (`RequestBulkhead`):** Limits global concurrency (default 64) and per-tenant concurrency (default 8) to prevent a single tenant from starving cluster resources.
+- **Output Token Budget (`OutputBudget`):** Real-time monitoring of generated output bytes and tool call arguments against caller-requested `max_tokens`, gracefully closing the stream if the ceiling is reached.
+
 [▲ Return to Top](#nova)
 
 ---
 
+<a id="distilled-postgresql-layer"></a>
 ## 🗄️ Distilled PostgreSQL Layer (Zero Supabase Bloat)
 
-NOVA eliminates all dependence on Supabase Cloud, Supabase Auth, Edge Functions, Stripe billing webhooks, and `pgvector` extensions. The 159 legacy migrations are distilled into a **single, idempotent, production-ready schema (`db/schema.sql`)**.
+NOVA eliminates all dependence on Supabase Cloud, Supabase Auth, Edge Functions, Stripe billing webhooks, and `pgvector` extensions. The 159 legacy migrations are distilled into a **single, idempotent, production-ready schema ([db/schema.sql](file:///Users/bozoegg/Downloads/nova/db/schema.sql))**.
 
 ### Architectural Distillation Summary
 
@@ -941,7 +1046,7 @@ npm run db:migrate
 npm run db:seed
 ```
 
-Development seed identities provisioned by `db/seed.sql`:
+Development seed identities provisioned by [db/seed.sql](file:///Users/bozoegg/Downloads/nova/db/seed.sql):
 - **Runtime Principal Token:** `nova-dev-runtime-token`
 - **Operator Principal Token:** `nova-dev-operator-token`
 - **Registrar Principal Token:** `nova-dev-registrar-token`
@@ -952,6 +1057,7 @@ Development seed identities provisioned by `db/seed.sql`:
 
 ---
 
+<a id="production-deployment"></a>
 ## 🐳 Production Deployment Runbook
 
 ### 1. Docker Compose (All-in-One Cluster)
@@ -1099,6 +1205,7 @@ When terminating a pod or restarting a container:
 
 ---
 
+<a id="troubleshooting-matrix"></a>
 ## 🛡️ Operational Troubleshooting & Error Taxonomy
 
 | HTTP Status | Error Code | Root Cause | Recommended Action |
@@ -1116,8 +1223,10 @@ When terminating a pod or restarting a container:
 
 ---
 
+<a id="testing-and-verification"></a>
 ## 🧪 Testing, Benchmarks & Verification
 
+<a id="benchmarks--performance-overhead"></a>
 ### Benchmarks & Performance Overhead
 
 NOVA is engineered for sub-millisecond dispatch overhead:
@@ -1135,17 +1244,108 @@ npm test
 npm run typecheck
 ```
 
-### Test Suite Map
-- [credential-pool.test.ts](file:///Users/bozoegg/Downloads/nova/tests/credential-pool.test.ts): SWRR distribution, continuous token buckets, unconsumed refunds, circuit breaker canary probing.
-- [queue.test.ts](file:///Users/bozoegg/Downloads/nova/tests/queue.test.ts): Infused native BroccoliQueue engine, MinHeap priority ordering, delay timers, lease heartbeats, and idempotency deduplication.
-- [pool-queue.test.ts](file:///Users/bozoegg/Downloads/nova/tests/pool-queue.test.ts): BroccoliDB WAL queue persistence, worker round-robin fairness, graceful queue draining.
-- [pool-runtime.test.ts](file:///Users/bozoegg/Downloads/nova/tests/pool-runtime.test.ts): Fenced lease binding, settlement sweeps, central coordinator RBAC isolation.
-- [postgres-db.test.ts](file:///Users/bozoegg/Downloads/nova/tests/postgres-db.test.ts): Distilled schema validity, seed application, PostgreSQL stored procedure execution.
-- [relay-client.test.ts](file:///Users/bozoegg/Downloads/nova/tests/relay-client.test.ts): End-to-end `NovaClient` streaming SSE parsing and synchronous chat against live mock server.
-- [relay-server.test.ts](file:///Users/bozoegg/Downloads/nova/tests/relay-server.test.ts): Timing-safe authentication, idempotency deduplication, WebSocket routing, and error masking.
+### Complete 23-Test Suite Map
+- [credential-pool.test.ts](file:///Users/bozoegg/Downloads/nova/tests/credential-pool.test.ts) (4 tests):
+  1. `NovaRateGovernor calculates sliding window limits and parses durations`
+  2. `NovaCircuitBreaker dissects upstream errors and manages canary slots`
+  3. `NovaCredentialPool leases accounts using Smooth Weighted Round Robin (SWRR)`
+  4. `NovaCredentialPool handles token reservation and release`
+- [queue.test.ts](file:///Users/bozoegg/Downloads/nova/tests/queue.test.ts) (6 tests):
+  1. `BroccoliQueue validates producer batches before changing tables`
+  2. `BroccoliQueue bulk enqueue copies payloads, preserves idempotency, and reports state counts`
+  3. `BroccoliQueue coalesces concurrent writes into shared flush window`
+  4. `BroccoliQueue workers claim batches, renew leases via heartbeat, and complete jobs`
+  5. `BroccoliQueue retries failing jobs with exponential backoff and tracks attempts`
+  6. `BroccoliQueue allows cancellation and pruning of expired jobs`
+- [pool-queue.test.ts](file:///Users/bozoegg/Downloads/nova/tests/pool-queue.test.ts) (1 test):
+  1. `NovaRequestQueue enqueues, processes via worker, handles idempotency, and drains cleanly`
+- [pool-runtime.test.ts](file:///Users/bozoegg/Downloads/nova/tests/pool-runtime.test.ts) (2 tests):
+  1. `PoolExecution with MemoryExecutionStore persists reservations, binds leases, and settles`
+  2. `Pool Central Server validates protocol routes and isolates caller roles`
+- [postgres-db.test.ts](file:///Users/bozoegg/Downloads/nova/tests/postgres-db.test.ts) (6 tests):
+  1. `Distilled PostgreSQL schema is bloat-free and contains all required NOVA definitions`
+  2. `Distilled PostgreSQL seed script provides local development identities`
+  3. `resolveDatabaseUrl handles custom URLs and fallback defaults`
+  4. `PostgresExecutionStore executes relay_execution stored procedure`
+  5. `centralQuery executes relay_control stored procedure and maps errors`
+  6. `migrateDatabase mock runner executes schema and seed queries sequentially`
+- [relay-client.test.ts](file:///Users/bozoegg/Downloads/nova/tests/relay-client.test.ts) (1 test):
+  1. `NovaClient interacts end-to-end with NovaRelayServer for streaming and non-streaming inference`
+- [relay-server.test.ts](file:///Users/bozoegg/Downloads/nova/tests/relay-server.test.ts) (3 tests):
+  1. `Relay server rejects unauthenticated requests and enforces authorization`
+  2. `Relay server routes streaming chat completion through upstream WebSocket`
+  3. `Relay server preserves idempotency and returns job status`
 
 ---
 
+<a id="project-structure"></a>
+## 📂 Project Directory Structure
+
+```
+nova/
+├── bin/
+│   ├── nova.ts                  # Unified CLI runner (relay, pool, migrate)
+│   ├── relay.ts                 # Standalone NOVA Relay Gateway CLI
+│   ├── pool.ts                  # Standalone NOVA Pool Runtime CLI
+│   └── migrate.ts               # Standalone PostgreSQL Migration CLI
+├── db/
+│   ├── schema.sql               # Single distilled PostgreSQL schema (0 Supabase bloat)
+│   └── seed.sql                 # Development seed data (pools, runtimes, principals, shard)
+├── src/
+│   ├── client/
+│   │   ├── relay-client.ts      # NovaClient async SDK (chatStream, chat, generateImage)
+│   │   └── stream-parser.ts     # Resilient chunk-level SSE stream parser
+│   ├── db/
+│   │   ├── postgres.ts          # Native pg pool connection manager & health checker
+│   │   └── migrate.ts           # Migration executor for schema.sql and seed.sql
+│   ├── pools/
+│   │   ├── circuit-breaker.ts   # NovaCircuitBreaker & canary slot governor
+│   │   ├── credential-pool.ts   # NovaCredentialPool (SWRR, 2-phase reservations)
+│   │   ├── credential-substrate.ts # Reactive shard account registry
+│   │   ├── lease-transition.ts  # Health coalescing & state transitions
+│   │   ├── pool-central.ts      # Central coordinator HTTP server & RBAC
+│   │   ├── pool-contracts.ts    # TypeScript interfaces for pools, accounts & quotas
+│   │   ├── pool-execution.ts    # Fenced lease binding & Postgres/Memory execution stores
+│   │   ├── pool-image-policy.ts # Dedicated image generation workload policy
+│   │   ├── pool-protocol.ts     # Wire protocol contracts & CentralClient
+│   │   ├── pool-public-response.ts # Strict public DTO formatters
+│   │   ├── pool-request-queue.ts# NovaRequestQueue BroccoliDB WAL queue
+│   │   ├── pool-runtime.ts      # NovaPoolRuntime worker coordinator
+│   │   ├── pool-scheduler.ts    # Fair queue dispatch scheduler
+│   │   └── rate-governor.ts     # NovaRateGovernor continuous token bucket
+│   ├── queue/
+│   │   ├── index.ts             # Native infused BroccoliQueue entrypoint
+│   │   ├── queue.ts             # MinHeap-driven in-process job queue engine
+│   │   └── types.ts             # Pure backend job queue contracts
+│   ├── relay/
+│   │   ├── admission-lifecycle.ts # Request admission lifecycle hooks
+│   │   ├── capability-registry.ts # Shard capability reverse index & routing
+│   │   ├── codex-image-tool.ts  # Upstream Codex image alias definitions
+│   │   ├── completion-usage.ts  # Token usage extractor
+│   │   ├── function-tools.ts    # Tool and function call validator & normalizer
+│   │   ├── output-budget.ts     # Output token budget ceiling monitor
+│   │   ├── private-failure.ts   # Zero-leak error masking & sanitization
+│   │   ├── quota-policy.ts      # Cooldown & quota deadline policies
+│   │   ├── relay-server.ts      # NovaRelayServer HTTP/WS engine & 7-layer timeouts
+│   │   ├── request-bulkhead.ts  # In-flight concurrency limiters
+│   │   ├── request-policy.ts    # JSON body validation & RequestError
+│   │   ├── shard-registry.ts    # AES-256-GCM shard credential vault
+│   │   └── telemetry.ts         # In-memory telemetry aggregator
+│   ├── security/
+│   │   └── image-artifact.ts    # Sharp sRGB sanitization & base64 validation
+│   ├── storage/
+│   │   ├── memory-table.ts      # Standalone BroccoliDbTable in-memory table
+│   │   ├── table-aggregation.ts # Table aggregation engine
+│   │   └── table-contracts.ts   # Storage interfaces
+│   └── index.ts                 # Master library entrypoint exporting public APIs
+├── tests/                       # 23 automated unit and integration tests across 7 suites
+├── package.json
+└── tsconfig.json
+```
+
+---
+
+<a id="architectural-boundary-guarantees"></a>
 ## 🔒 Architectural Boundary Guarantees
 
 1. **Zero External Workspace Dependencies:** `nova` does not import any files from external or parent directories (`../`). All required models, security routines, and storage drivers are self-contained.
@@ -1155,6 +1355,7 @@ npm run typecheck
 
 ---
 
+<a id="contributing"></a>
 ## 🤝 Contributing
 
 Contributions are welcome! Please follow these steps:
@@ -1166,6 +1367,7 @@ Contributions are welcome! Please follow these steps:
 
 ---
 
+<a id="license"></a>
 ## 📄 License
 
 Distributed under the MIT License. See [package.json](file:///Users/bozoegg/Downloads/nova/package.json) for details.
