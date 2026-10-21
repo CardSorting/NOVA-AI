@@ -60,6 +60,7 @@
 
 ### 2. Architecture Deep Dives
 - [Request Lifecycle & Substrate Dataflow](./architecture/dataflow-and-lifecycle.md)
+- [Standalone Substrate Architecture & Process Topology](./architecture/standalone-daemon-substrate.md)
 - [Smooth Weighted Round Robin (SWRR) Formulation](./architecture/smooth-weighted-round-robin.md)
 - [Continuous Token Bucket Rate Governance](./architecture/rate-governor-leaky-bucket.md)
 - [7-Layer WebSocket Timeout Hierarchy](./architecture/7-layer-timeout-hierarchy.md)
@@ -88,6 +89,7 @@
 - [ADR-0004: Distilled PostgreSQL Substrate (Zero Supabase Bloat)](./adrs/ADR-0004-distilled-postgresql.md)
 - [ADR-0005: 7-Layer WebSocket Timeout Hierarchy](./adrs/ADR-0005-7-layer-websocket-timeouts.md)
 - [ADR-0006: Hardware-Grade AES-256-GCM Envelope Encryption](./adrs/ADR-0006-aes-256-gcm-vault-security.md)
+- [ADR-0007: Standalone Daemon Substrate Model (Anti-Embedding)](./adrs/ADR-0007-standalone-daemon-substrate-non-embedding.md)
 
 ### 6. Operational Runbooks
 - [Runbook: Production Incident Response & Severity Matrix](./runbooks/runbook-incident-response.md)
@@ -107,6 +109,7 @@
 ### 9. Maintainer Operations & Governance
 - [Project Maintainers Charter & Governance](../MAINTAINERS.md)
 - [Maintainer Operations Portal & Index](./maintainers/README.md)
+- [Anti-Scope-Creep & Non-Embedding Policy](./maintainers/anti-scope-creep-policy.md)
 - [SemVer 2.0.0 Release Engineering & SLSA Provenance](./maintainers/release-engineering.md)
 - [Strict PR Review Quality Gates & Merge Strategy](./maintainers/code-review-and-merging.md)
 - [Security Vulnerability Handling & Coordinated Disclosure](./maintainers/security-vulnerability-handling.md)
@@ -116,6 +119,7 @@
 - [Architecture Governance & Anti-Dependency Policy](./maintainers/architecture-governance.md)
 
 ---
+
 
 <a id="documentation-governance"></a>
 ## 🛡️ Documentation Freshness & CI/CD Gate

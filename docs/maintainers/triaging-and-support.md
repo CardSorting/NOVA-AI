@@ -95,10 +95,12 @@ A bug report cannot be marked as `status:reproduced` or assigned priority until 
 
 ### Feature Proposals
 - Substantial architectural proposals must follow the [Architecture Governance Process](./architecture-governance.md) and be submitted as an Architecture Decision Record (ADR) pull request.
-- Smaller feature requests are evaluated based on alignment with NOVA's core mission (headless inference relay). Features introducing client UI dependencies or third-party queue engines are closed immediately with an explanation.
+- Smaller feature requests are evaluated based on alignment with NOVA's core mission: an autonomous out-of-process inference relay and queue substrate.
+- **Immediate Rejection of Scope Creep:** Features that attempt to embed NOVA in-process inside other products, introduce client-facing UI widgets/screens, add user authentication/passwords, or implement consumer billing checkouts must be closed immediately with reference to [Anti-Scope-Creep Policy](./anti-scope-creep-policy.md) and [ADR-0007](../adrs/ADR-0007-standalone-daemon-substrate-non-embedding.md).
 
 ### General Support & Questions
 - Issues asking "How do I configure my upstream provider?" or "How do I deploy on cloud X?" are gently redirected to **GitHub Discussions** or community forums, and the issue is closed as `type:question`.
+
 
 ---
 

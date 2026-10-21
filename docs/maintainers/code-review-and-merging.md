@@ -53,12 +53,16 @@ Before approving any pull request, maintainers must verify each of the following
 ├────────────────────────────────┼───────────────────────────────────────┤
 │ 5. Documentation Gate          │ npm run lint:docs passes, ADR added   │
 │                                │ for architectural additions           │
+├────────────────────────────────┼───────────────────────────────────────┤
+│ 6. Anti-Scope-Creep Gate       │ Standalone daemon only, zero product  │
+│                                │ embedding, zero client UI/business    │
 └────────────────────────────────┴───────────────────────────────────────┘
 ```
 
 ### 1. Architectural Invariant Checks
 - [ ] **Hermetic Substrate:** Confirm there are zero imports from outside the repository root (`../` that escape `nova`). All imports must be relative to `src/` or official npm packages.
 - [ ] **Headless Queue Purity:** Verify that `src/queue` has zero browser DOM, CSS, or UI runtime dependencies. The queue must remain completely headless and operational in server/container environments.
+- [ ] **Standalone Daemon Mandate:** NOVA must never be packaged, exported, or altered to run embedded inside a foreign product process. All integrations must take place over network sockets (HTTP/WS).
 - [ ] **Zero-Leak Privacy Firewall:** Public HTTP endpoints (`/v1/*`) must never expose internal shard credentials, upstream authorization tokens, or raw provider stack traces. All error paths must be sanitized via `src/relay/private-failure.ts`.
 - [ ] **Distilled PostgreSQL Portability:** Database alterations must be reflected directly in [db/schema.sql](file:///Users/bozoegg/Downloads/nova/db/schema.sql). Cloud-proprietary lock-in (e.g. Supabase proprietary RPCs) is prohibited.
 - [ ] **Deterministic Idempotency:** Any mutation or enqueued job must respect client idempotency keys to prevent duplicate execution during network retries.
@@ -84,6 +88,13 @@ Before approving any pull request, maintainers must verify each of the following
 - [ ] **Documentation Linter Passes:** `npm run lint:docs` must exit with 0 errors and 0 warnings.
 - [ ] **ADR Requirement:** If the PR introduces a new subsystem, alters a public protocol wire contract, or adds a new runtime dependency, an Architecture Decision Record must be included in `docs/adrs/`.
 - [ ] **Changelog Entry:** The PR must include an entry in [CHANGELOG.md](file:///Users/bozoegg/Downloads/nova/CHANGELOG.md) under `[Unreleased]`.
+
+### 6. Anti-Scope-Creep & Non-Embedding Verification
+- [ ] **Zero Product UI Bloat:** Verify the PR introduces no client-side UI frameworks, HTML templates, CSS bundles, or browser components.
+- [ ] **Zero Foreign Product Embedding:** Verify the PR does not attempt to turn NOVA into an in-process library for another product or export singleton instances designed to be embedded in external product monoliths.
+- [ ] **No Consumer IAM / Billing:** Reject any attempts to add end-user passwords, OAuth consumer logins, Stripe checkouts, or application-level CRM chat histories into NOVA core.
+- [ ] **Adherence to Anti-Scope-Creep Policy:** Verify full compliance with [Anti-Scope-Creep Policy](file:///Users/bozoegg/Downloads/nova/docs/maintainers/anti-scope-creep-policy.md) and [ADR-0007](file:///Users/bozoegg/Downloads/nova/docs/adrs/ADR-0007-standalone-daemon-substrate-non-embedding.md).
+
 
 ---
 

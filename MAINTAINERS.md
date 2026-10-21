@@ -33,6 +33,8 @@ This document outlines the governance structure, maintainer roles, responsibilit
 2. **Strict Architectural Isolation:** Core subsystems (`src/queue`, `src/relay`, `src/pool`, `src/db`) must remain strictly bounded. Zero parent directory imports, zero client UI bloat in backend queues, and zero external runtime dependencies (such as Redis or BullMQ) are tolerated.
 3. **Radical Transparency:** Architectural choices, post-mortems, and governance decisions are documented in public Architecture Decision Records ([docs/adrs/](file:///Users/bozoegg/Downloads/nova/docs/adrs)) and blameless retrospectives ([docs/post-mortems/](file:///Users/bozoegg/Downloads/nova/docs/post-mortems)).
 4. **Security by Default:** Zero-leak privacy firewalls, hardware-grade AES-256-GCM envelope encryption, and private vulnerability coordination are non-negotiable.
+5. **Autonomous Substrate (Non-Embedding):** NOVA operates strictly as an autonomous, out-of-process daemon and infrastructure substrate (producing and consuming requests over standard wire protocols). It must NEVER be embedded inside another product, bundled as a UI product layer, or burdened with consumer application business logic.
+
 
 ---
 
@@ -192,6 +194,7 @@ Maintainers are the guardians of NOVA's core system invariants:
    - `npm run lint:docs` (0 broken links, 0 stale patterns)
    - `npm run typecheck` (0 TypeScript errors)
    - `npm test` (100% passing tests)
+6. **Anti-Scope-Creep & Non-Embedding Mandate:** Maintainers must immediately reject any pull request or RFC attempting to embed NOVA inside client applications or add product-layer features (e.g. user authentication, payment checkouts, consumer UI screens, CRM history). External products must interface with NOVA purely as external network clients.
 
 ---
 
@@ -211,6 +214,7 @@ For in-depth operational procedures, refer to the maintainer documentation suite
 
 | Document | Purpose |
 | :--- | :--- |
+| 🛡️ **[Anti-Scope-Creep & Non-Embedding Policy](file:///Users/bozoegg/Downloads/nova/docs/maintainers/anti-scope-creep-policy.md)** | Mandatory policy prohibiting in-process embedding into external products and defining scope boundaries. |
 | 🚀 **[Release Engineering Guide](file:///Users/bozoegg/Downloads/nova/docs/maintainers/release-engineering.md)** | Step-by-step SemVer release process, GPG signing, SLSA provenance, and multi-arch containers. |
 | 🛡️ **[Code Review & Merging Policy](file:///Users/bozoegg/Downloads/nova/docs/maintainers/code-review-and-merging.md)** | Strict review criteria, architectural invariants, and squash-merge conventions. |
 | 🔒 **[Security Vulnerability Handling](file:///Users/bozoegg/Downloads/nova/docs/maintainers/security-vulnerability-handling.md)** | Security response protocol, CVSS triage, coordinated disclosure, and GHSA management. |
@@ -218,3 +222,4 @@ For in-depth operational procedures, refer to the maintainer documentation suite
 | 🗄️ **[Database Migration Policy](file:///Users/bozoegg/Downloads/nova/docs/maintainers/database-migration-policy.md)** | Zero-downtime schema evolution, expand-contract pattern, and lock safety. |
 | 👥 **[Onboarding & Offboarding Runbook](file:///Users/bozoegg/Downloads/nova/docs/maintainers/onboarding-and-offboarding.md)** | Maintainer provisioning, 2FA/GPG enforcement, permission matrices, and offboarding. |
 | 🏛️ **[Architecture Governance](file:///Users/bozoegg/Downloads/nova/docs/maintainers/architecture-governance.md)** | ADR lifecycle, anti-dependency creep rules, and subsystem decoupling. |
+

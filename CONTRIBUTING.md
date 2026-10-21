@@ -64,8 +64,11 @@ When contributing to NOVA, you must strictly uphold our core architectural invar
    Database schema changes must remain self-contained in [db/schema.sql](file:///Users/bozoegg/Downloads/nova/db/schema.sql). Do not introduce proprietary cloud dependencies (e.g., Supabase-specific extensions or external webhook handlers).
 5. **Deterministic Idempotency:**
    All mutations and inferences passing through `NovaRequestQueue` or `BroccoliQueue` must maintain stable idempotency keys and prevent double-billing on client retries.
+6. **Standalone Infrastructure Substrate (No Embedding in Other Products):**
+   NOVA operates strictly as an autonomous out-of-process daemon and network service. Do not submit pull requests that attempt to embed NOVA in-process inside client application layers, or introduce consumer-facing UI frameworks, product payment checkouts, or user authentication schemas. See [Anti-Scope-Creep Policy](file:///Users/bozoegg/Downloads/nova/docs/maintainers/anti-scope-creep-policy.md) and [ADR-0007](file:///Users/bozoegg/Downloads/nova/docs/adrs/ADR-0007-standalone-daemon-substrate-non-embedding.md).
 
 ---
+
 
 ## Local Development Workflow
 

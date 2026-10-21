@@ -97,6 +97,7 @@ Deploying large-scale generative AI applications into production presents severe
 - 🔒 **Durable Stream Idempotency:** SHA-256 prompt and parameter hashing with atomic in-flight stream collapsing, guaranteeing clients re-attaching to retries never double-bill your accounts.
 - 🛡️ **Zero-Leak Privacy Firewall:** Strips all upstream shard IDs, auth bearer keys, database connection strings, and raw stack traces from caller responses.
 - 🗄️ **Distilled PostgreSQL Layer:** Distills 159 legacy Supabase migrations into **one clean, self-contained schema ([db/schema.sql](file:///Users/bozoegg/Downloads/nova/db/schema.sql))** with zero cloud vendor locks.
+- 🏛️ **Autonomous Standalone Daemon (Zero Product Embedding):** Engineered to run as an independent, out-of-process daemon/microservice acting as a producer and consumer of requests over standard wire protocols. It is never embedded inside a product layer, isolating event loops and eliminating coupled blast radii.
 
 ---
 
@@ -1392,6 +1393,7 @@ nova/
 2. **Untouched Source Codebase:** The parent GALX codebase remains in its pristine state with zero modifications.
 3. **Public Privacy Firewall:** All public DTOs format outputs through strict allowlists, preventing accidental disclosure of upstream telemetry, shard IDs, or internal failure diagnostics.
 4. **Idempotent Distilled Database:** [db/schema.sql](file:///Users/bozoegg/Downloads/nova/db/schema.sql) can be re-run safely multiple times against any PostgreSQL database without data loss.
+5. **Autonomous Substrate & Non-Embedding Mandate:** NOVA is strictly an out-of-process daemon and infrastructure substrate. It must never be embedded in-process inside another product layer or burdened with client UI or consumer business logic. See [Anti-Scope-Creep Policy](file:///Users/bozoegg/Downloads/nova/docs/maintainers/anti-scope-creep-policy.md) and [ADR-0007](file:///Users/bozoegg/Downloads/nova/docs/adrs/ADR-0007-standalone-daemon-substrate-non-embedding.md).
 
 ---
 

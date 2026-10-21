@@ -56,6 +56,18 @@ const STALE_PATTERNS = [
     message: 'Supabase migrations have been distilled into a single idempotent schema.sql.',
     severity: 'error' as const,
   },
+  {
+    regex: /\b(?:recommend(?:s|ing)?\s+(?:to\s+)?embed\s+nova|instruct(?:s|ing)?\s+to\s+embed\s+nova|embed\s+nova\s+(?:directly\s+)?in-process\s+in\s+your\s+app)\b/i,
+    rule: 'prohibited-product-embedding',
+    message: 'NOVA is strictly an autonomous out-of-process substrate daemon. Never instruct or recommend embedding NOVA in-process inside another product.',
+    severity: 'error' as const,
+  },
+  {
+    regex: /\b(?:nova\s+is\s+a\s+product\s+layer|nova\s+provides\s+client-side\s+ui\s+widgets?|nova\s+acts\s+as\s+a\s+user\s+product)\b/i,
+    rule: 'scope-creep-product-layer',
+    message: 'NOVA must never be described as a user-facing product layer or UI widget engine. It is an autonomous infrastructure substrate.',
+    severity: 'error' as const,
+  },
 ];
 
 const VALID_CODE_LANGUAGES = new Set([
@@ -346,6 +358,7 @@ function checkOrphanedDocs(allFiles: string[]): void {
 const REQUIRED_MAINTAINER_DOCS = [
   'MAINTAINERS.md',
   'docs/maintainers/README.md',
+  'docs/maintainers/anti-scope-creep-policy.md',
   'docs/maintainers/release-engineering.md',
   'docs/maintainers/code-review-and-merging.md',
   'docs/maintainers/security-vulnerability-handling.md',

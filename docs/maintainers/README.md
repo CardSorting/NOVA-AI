@@ -32,6 +32,7 @@ The following comprehensive playbooks govern daily repository operations:
 
 | Playbook | Summary | Primary Audience |
 | :--- | :--- | :--- |
+| 🛡️ **[Anti-Scope-Creep & Non-Embedding Policy](./anti-scope-creep-policy.md)** | Mandatory policy prohibiting in-process embedding into external products, defining the standalone daemon model and scope boundaries. | Core Maintainers, Reviewers, Steering |
 | 🚀 **[Release Engineering Guide](./release-engineering.md)** | Step-by-step SemVer 2.0 release procedure, GPG signing, SLSA Level 3 provenance, multi-arch container builds, and emergency rollback protocols. | Release Engineers, Steering Committee |
 | 🛡️ **[Code Review & Merging Policy](./code-review-and-merging.md)** | Review checklists, invariant validation, CI gate requirements, Conventional Commit rules, and squash-and-merge enforcement. | Core Maintainers, Reviewers |
 | 🔒 **[Security Vulnerability Handling](./security-vulnerability-handling.md)** | Incident intake via GitHub PVR, CVSS v3.1 scoring, private advisories (GHSA), 14-day embargoes, CVE reservations, and patch backporting. | Security Response Team (SRT) |
@@ -39,6 +40,7 @@ The following comprehensive playbooks govern daily repository operations:
 | 🗄️ **[Database Migration Policy](./database-migration-policy.md)** | Zero-downtime PostgreSQL schema evolution for `db/schema.sql`, expand-contract pattern, safe locking, and rollback runbooks. | Database Stewards, Core Maintainers |
 | 👥 **[Onboarding & Offboarding Runbook](./onboarding-and-offboarding.md)** | Maintainer career ladder, hardware 2FA enforcement, GPG key registration, permission matrices, and emeritus offboarding. | Steering Committee, Mentors |
 | 🏛️ **[Architecture Governance](./architecture-governance.md)** | Architectural Decision Record (ADR) lifecycle, anti-dependency creep policies, and subsystem boundary enforcement. | Architects, Core Maintainers |
+
 
 ---
 

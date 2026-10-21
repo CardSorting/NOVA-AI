@@ -125,6 +125,9 @@ Public relay endpoints must isolate internal cluster topology from callers. Erro
 ### 4. Relational Persistence Decoupling
 Subsystems interact with database persistence via abstract interfaces (`IExecutionStore`). Storage implementations can be swapped between in-memory mock stores (`MemoryExecutionStore`) for testing and PostgreSQL (`PostgresExecutionStore`) for production without affecting business logic.
 
+### 5. Standalone Daemon Substrate (Anti-Embedding Invariant)
+NOVA must never be adapted, packaged, or imported as an in-process library inside consumer applications. Applications must communicate with NOVA strictly over network wire protocols (HTTP/WS). For comprehensive guidelines, consult the [Anti-Scope-Creep Policy](./anti-scope-creep-policy.md) and [ADR-0007](../adrs/ADR-0007-standalone-daemon-substrate-non-embedding.md).
+
 ---
 
 ## Enforcement via Automated CI Gates
@@ -133,3 +136,4 @@ Architectural boundaries are enforced automatically on every commit:
 - `scripts/lint-docs.ts` verifies ADR structure, checks for stale dependencies, and flags missing documentation links.
 - `tsc --noEmit` verifies strict type decoupling across all subsystems.
 - `npm test` runs isolated unit tests asserting that components operate independently without cross-boundary state leaks.
+

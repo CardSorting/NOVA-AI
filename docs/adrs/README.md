@@ -15,3 +15,5 @@ Architecture Decision Records (ADRs) capture critical architectural choices, tra
 | **[ADR-0004](./ADR-0004-distilled-postgresql.md)** | Distilled PostgreSQL Substrate (Zero Supabase Bloat) | **Accepted** | 2026-10-20 |
 | **[ADR-0005](./ADR-0005-7-layer-websocket-timeouts.md)** | 7-Layer WebSocket Timeout Hierarchy & ITL Pacing | **Accepted** | 2026-10-20 |
 | **[ADR-0006](./ADR-0006-aes-256-gcm-vault-security.md)** | Hardware-Grade AES-256-GCM Envelope Encryption | **Accepted** | 2026-10-20 |
+| **[ADR-0007](./ADR-0007-standalone-daemon-substrate-non-embedding.md)** | Standalone Daemon Substrate Model & Non-Embedding | **Accepted** | 2026-10-21 |
+
