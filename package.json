@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "@noorm/broccolidb": "https://codeload.github.com/CardSorting/ABroccoliDB/tar.gz/f085f3f5dbceadc4cd6752b081ebfc51b02fe3f7",
-    "broccoli-queue": "https://codeload.github.com/CardSorting/BROCCOLIQUEUE/tar.gz/c38a7db40e8bcaf99c7f83af755c5e43a6d7feec",
     "pg": "^8.13.0",
     "sharp": "^0.33.0",
     "ws": "^8.18.0"

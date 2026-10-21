@@ -17,7 +17,8 @@
 
 ---
 
-[![Tests](https://img.shields.io/badge/tests-17%20passing-brightgreen.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/tests)
+[![Tests](https://img.shields.io/badge/tests-23%20passing-brightgreen.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/tests)
+[![Queue Engine](https://img.shields.io/badge/BroccoliQueue-Native%20Infused-success.svg?style=flat-square)](#4-native-infused-broccoliqueue-engine--novarequestqueue)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6%20Strict-blue.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/tsconfig.json)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D20.0.0-emerald.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/package.json)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14--17%2B-blueviolet.svg?style=flat-square)](file:///Users/bozoegg/Downloads/nova/db/schema.sql)
@@ -824,13 +825,49 @@ await pool.releaseLease(reservation.lease.leaseId, {
   $$\text{backoff} = \text{random}(0, \min(\text{maxDelay}, \text{baseDelay} \times 2^{\text{failures}}))$$
 - **Single-Canary Half-Open Probing:** When the cooldown expires, the shard transitions to `half-open`. Exactly one canary request is admitted. If it succeeds, the shard is restored to `healthy`; if it fails, cooldown doubles.
 
----
+### 4. Native Infused BroccoliQueue Engine & NovaRequestQueue
 
-### 4. BroccoliDB Write-Ahead-Log (WAL) Request Queue
-High-concurrency workloads are buffered by `NovaRequestQueue`:
-- **Crash-Resilient Checkpoints:** Backed by an append-only WAL and atomic filesystem snapshots (`.broccolidb/relay-snapshot.json.tmp` $\to$ rename).
-- **Per-Tenant Fairness:** Dispatches requests using a deficit round-robin algorithm across tenant IDs to prevent any single noisy neighbor from monopolizing shard resources.
-- **Bounded Waiting Room:** Caps max queue depth (default: 500 requests). Incoming requests beyond capacity are rejected immediately with `HTTP 429` and a `Retry-After` header instead of causing cascading memory failure.
+NOVA natively embeds the high-throughput, in-process **BroccoliQueue** engine (`src/queue/`), eliminating external queue services (Redis, RabbitMQ, SQS, or BullMQ) while maintaining crash-resilient persistence on BroccoliDB tables.
+
+#### Key Architectural Capabilities:
+- **Zero External Dependencies:** 100% self-contained in-memory indexed tables backed by an append-only WAL.
+- **Three Internal MinHeaps for $O(1)$ Scheduling:**
+  - **Ready Heap:** Orders jobs by descending priority with FIFO sequence preservation (`priority DESC, sequence ASC`).
+  - **Delayed Heap:** Orders delayed jobs by execution deadline (`availableAt ASC`).
+  - **Lease Heap:** Tracks active worker leases by expiration (`leaseExpiresAt ASC`) for sub-second crash recovery.
+- **Lease Renewal & Heartbeats (`context.heartbeat()`):** Long-running inference jobs (e.g., deep reasoning or image synthesis) automatically renew their leases, preventing premature recovery while keeping worker timeout ceilings tight.
+- **Crash-Resilient WAL Recovery:** Replays newline-delimited WAL frames with checksum validation on process restarts.
+- **Per-Tenant Fairness & Bounded Waiting Room:** `NovaRequestQueue` caps tenant burst queuing and uses deficit round-robin dispatch across tenant keys.
+- **Headless Backend Architecture:** 100% clean backend execution with zero browser UI dependencies; queue observability is exposed through native `/metrics`, `/health`, and internal telemetry endpoints.
+
+```typescript
+import { BroccoliQueue, BroccoliDatabaseKernel } from './src/index.js';
+
+// 1. Initialize queue on top of local BroccoliDB workspace
+const db = new BroccoliDatabaseKernel({ workspaceRoot: './.broccolidb/queue-data' });
+const queue = new BroccoliQueue({
+  db,
+  namespace: 'nova_inference',
+  retentionMs: 3600_000 // 1 hour terminal retention
+});
+await queue.start();
+
+// 2. Register worker with lease heartbeats
+const worker = queue.process('inference_tasks', async (job, context) => {
+  // Renew lease during long inference generations:
+  await context.heartbeat();
+  return { status: 'completed', result: 'Model output' };
+}, { concurrency: 8, leaseDurationMs: 30_000 });
+await worker.start();
+
+// 3. Enqueue idempotent job batch
+await queue.add('inference_tasks', { prompt: 'Synthesize report' }, {
+  priority: 10,
+  attempts: 3,
+  backoff: { type: 'exponential', delayMs: 1000 },
+  idempotencyKey: 'request_uuid_12345'
+});
+```
 
 ---
 
@@ -1091,7 +1128,7 @@ NOVA is engineered for sub-millisecond dispatch overhead:
 
 ### Running Test Suite
 ```bash
-# Execute 17 tests across all 6 test suites:
+# Execute 23 tests across all 7 test suites:
 npm test
 
 # Verify strict TypeScript type contracts:
@@ -1100,6 +1137,7 @@ npm run typecheck
 
 ### Test Suite Map
 - [credential-pool.test.ts](file:///Users/bozoegg/Downloads/nova/tests/credential-pool.test.ts): SWRR distribution, continuous token buckets, unconsumed refunds, circuit breaker canary probing.
+- [queue.test.ts](file:///Users/bozoegg/Downloads/nova/tests/queue.test.ts): Infused native BroccoliQueue engine, MinHeap priority ordering, delay timers, lease heartbeats, and idempotency deduplication.
 - [pool-queue.test.ts](file:///Users/bozoegg/Downloads/nova/tests/pool-queue.test.ts): BroccoliDB WAL queue persistence, worker round-robin fairness, graceful queue draining.
 - [pool-runtime.test.ts](file:///Users/bozoegg/Downloads/nova/tests/pool-runtime.test.ts): Fenced lease binding, settlement sweeps, central coordinator RBAC isolation.
 - [postgres-db.test.ts](file:///Users/bozoegg/Downloads/nova/tests/postgres-db.test.ts): Distilled schema validity, seed application, PostgreSQL stored procedure execution.

@@ -62,6 +62,10 @@ export { BroccoliDbTable } from './storage/memory-table.js';
 export { BroccoliAggregateEngine } from './storage/table-aggregation.js';
 export type * from './storage/table-contracts.js';
 
+// Queue Engine (Headless BroccoliQueue)
+export { BroccoliQueue, states as queueStates, type JobProcessor } from './queue/index.js';
+export type * from './queue/types.js';
+
 // Client Adapters
 export { NovaClient, RelayClient, type RelayClientOptions, type ChatCompletionRequestOptions, type ChatCompletionResponse } from './client/relay-client.js';
 export { parseEventStream, type ChatCompletionChunk, type ChatChunkDelta } from './client/stream-parser.js';

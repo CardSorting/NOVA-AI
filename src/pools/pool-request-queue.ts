@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import * as fs from 'node:fs/promises';
 import path from 'node:path';
 import { BroccoliDatabaseKernel } from '@noorm/broccolidb';
-import { BroccoliQueue, type BroccoliDatabase, type Job, type WorkerHandle } from 'broccoli-queue';
+import { BroccoliQueue, type BroccoliDatabase, type Job, type WorkerHandle } from '../queue/index.js';
 import type { Workload } from './pool-protocol.js';
 
 const NAMESPACE = 'galxrelay';
